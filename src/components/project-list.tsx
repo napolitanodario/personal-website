@@ -1,6 +1,11 @@
 import { Tag } from "@/components/tag";
 import { projects } from "@/content/resume";
 
+/*
+ * Project showcase. Mirrors the layout of the work section, with the venue
+ * in place of the period and a row of tool tags closing each entry.
+ * A project title only becomes a link when the data provides a href.
+ */
 export function ProjectList() {
   return (
     <div className="space-y-12">
@@ -23,9 +28,11 @@ export function ProjectList() {
             </h3>
             <p className="label text-ink-faint">{project.venue}</p>
           </header>
+
           <p className="mt-3 leading-relaxed text-ink-muted text-pretty">
             {project.description}
           </p>
+
           <ul className="mt-4 flex flex-wrap gap-2">
             {project.tools.map((tool) => (
               <Tag key={tool}>{tool}</Tag>

@@ -1,13 +1,13 @@
 # Personal website
 
-Portfolio di Dario Napolitano. Next.js 16 (App Router), TypeScript, Tailwind CSS v4.
-Nessun backend: tutti i contenuti sono statici e vivono in un unico file tipizzato.
+Portfolio of Dario Napolitano. Next.js 16 (App Router), TypeScript, Tailwind CSS v4.
+There is no backend: every piece of content is static and lives in a single typed file.
 
-## Requisiti
+## Requirements
 
-- Node.js >= 20.9 (testato su 22)
+- Node.js 20.9 or newer (tested on 22)
 
-## Sviluppo
+## Development
 
 ```bash
 npm install
@@ -17,31 +17,42 @@ npm run start
 npm run lint
 ```
 
-## Struttura
+## Structure
 
 ```
 src/
   app/
-    layout.tsx        font, metadata, script anti-flash del tema
-    page.tsx          composizione delle sezioni
-    globals.css       design tokens + tema chiaro/scuro
-  components/         header, hero, sezioni, footer, toggle tema
+    layout.tsx        fonts, metadata, theme anti-flash script
+    page.tsx          section order and page layout
+    globals.css       design tokens, light and dark themes
+  components/         header, hero, section blocks, footer, theme toggle
   content/
-    resume.ts         unica fonte di verità per i contenuti
+    resume.ts         single source of truth for all content
 ```
 
-Per aggiornare il sito basta modificare `src/content/resume.ts`.
+To update the site, edit `src/content/resume.ts`. Components read from it and
+never hardcode copy.
 
 ## Design
 
-- Palette "carta e inchiostro": fondo avorio caldo, testo quasi nero, accento terracotta.
-  I colori sono variabili CSS in `globals.css`, esposte a Tailwind via `@theme inline`.
-- Tema chiaro/scuro: segue `prefers-color-scheme` e può essere forzato con
-  `data-theme="light" | "dark"` su `<html>` (persistito in `localStorage`).
-- Font: Instrument Serif per i titoli, Inter per il testo, JetBrains Mono per le etichette.
-  Sono self-hosted da `next/font` (nessuna richiesta a Google in runtime).
+- Paper and ink palette: warm ivory background, near black text, terracotta accent.
+  Colours are CSS variables in `globals.css`, exposed to Tailwind through
+  `@theme inline`, so changing one variable repaints the whole site.
+- Light and dark themes follow `prefers-color-scheme` and can be forced with
+  `data-theme="light"` or `data-theme="dark"` on the `html` element. The choice
+  is stored in `localStorage` and restored before the first paint.
+- Typography: Instrument Serif for headings, Inter for body copy, JetBrains Mono
+  for labels. All three are self-hosted through `next/font`, so no request is
+  sent to Google at runtime.
 
-## Deploy
+## Conventions
 
-`next.config.ts` usa `output: "standalone"`, quindi la build produce un server Node
-autonomo in `.next/standalone` — adatto a un container leggero dietro un reverse proxy.
+- All source, comments and documentation are written in English.
+- Plain ASCII only. No emoji, typographic dashes, bullets or other symbols in
+  code, comments or content.
+
+## Deployment
+
+`next.config.ts` sets `output: "standalone"`, so the build produces a
+self-contained Node server in `.next/standalone`. That is what makes it easy to
+run in a small container behind a reverse proxy.

@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* ==================================================================
+   Design tokens: light theme (default)
+   Warm paper background, near black ink, terracotta accent.
+   ================================================================== */
+
 :root {
   --paper: #faf8f4;
   --paper-raised: #f3efe7;
@@ -9,6 +14,11 @@
   --rule: #e2dbcd;
   --accent: #b0512f;
 }
+
+/* ==================================================================
+   Design tokens: dark theme, applied when the operating system asks
+   for it and no explicit user choice is stored.
+   ================================================================== */
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -21,6 +31,11 @@
     --accent: #e08a63;
   }
 }
+
+/* ==================================================================
+   Manual override. The theme toggle writes data-theme on the html
+   element, which wins over the media query above.
+   ================================================================== */
 
 :root[data-theme="light"] {
   --paper: #faf8f4;
@@ -42,6 +57,13 @@
   --accent: #e08a63;
 }
 
+/* ==================================================================
+   Tailwind theme mapping. Exposing the variables here is what makes
+   utilities such as bg-paper, text-ink or border-rule available,
+   and lets a single variable change repaint both themes.
+   Fonts are injected by next/font in the root layout.
+   ================================================================== */
+
 @theme inline {
   --color-paper: var(--paper);
   --color-paper-raised: var(--paper-raised);
@@ -56,15 +78,21 @@
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
+/* ==================================================================
+   Base element styles
+   ================================================================== */
+
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Lets the browser render native widgets and scrollbars to match. */
     color-scheme: light dark;
   }
 
   body {
     background-color: var(--paper);
     color: var(--ink);
+    /* Inter stylistic sets: single storey a, open digits, plain l. */
     font-feature-settings: "cv02", "cv03", "cv04";
     text-rendering: optimizeLegibility;
   }
@@ -75,12 +103,21 @@
   }
 }
 
+/* Anchor navigation jumps instantly for users who avoid motion. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 }
 
+/* ==================================================================
+   Custom utilities
+   ================================================================== */
+
+/*
+ * Small uppercase monospace lettering used for every secondary label:
+ * section titles, dates, navigation, tags and footer links.
+ */
 @utility label {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.6875rem;

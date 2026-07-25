@@ -1,5 +1,10 @@
 import { experience } from "@/content/resume";
 
+/*
+ * Work history. Each entry leads with the company in the serif face and
+ * pushes the period to the opposite edge, so the dates form a readable
+ * column down the right side of the page.
+ */
 export function ExperienceList() {
   return (
     <div className="space-y-12">
@@ -9,9 +14,13 @@ export function ExperienceList() {
             <h3 className="font-serif text-2xl">{job.company}</h3>
             <p className="label text-ink-faint">{job.period}</p>
           </header>
+
           <p className="mt-1 text-sm text-ink-muted">
-            {job.role} · {job.location}
+            {job.role} - {job.location}
           </p>
+
+          {/* Bullets are drawn as short accent rules rather than dots,
+              which keeps the list markers on brand and ASCII only. */}
           <ul className="mt-5 space-y-2.5">
             {job.highlights.map((highlight) => (
               <li

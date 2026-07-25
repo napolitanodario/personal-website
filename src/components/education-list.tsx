@@ -1,5 +1,9 @@
 import { education } from "@/content/resume";
 
+/*
+ * Academic background. Same header rhythm as the work section so the two
+ * read as a continuous timeline: institution left, period right.
+ */
 export function EducationList() {
   return (
     <div className="space-y-10">
@@ -9,12 +13,18 @@ export function EducationList() {
             <h3 className="font-serif text-2xl">{entry.institution}</h3>
             <p className="label text-ink-faint">{entry.period}</p>
           </header>
+
           <p className="mt-1 text-sm text-ink-muted">
-            {entry.degree} · {entry.field}
+            {entry.degree} - {entry.field}
           </p>
+
+          {/* Coursework and any extra note, such as an exchange programme. */}
           <ul className="mt-4 space-y-2">
             {entry.notes.map((note) => (
-              <li key={note} className="leading-relaxed text-ink-muted text-pretty">
+              <li
+                key={note}
+                className="leading-relaxed text-ink-muted text-pretty"
+              >
                 {note}
               </li>
             ))}

@@ -1,3 +1,13 @@
+/**
+ * Single source of truth for every piece of text rendered on the site.
+ * Components never hardcode content: edit this file to update the portfolio.
+ * Keep all values plain ASCII, no typographic dashes, bullets or symbols.
+ */
+
+/* ------------------------------------------------------------------ */
+/* Types                                                               */
+/* ------------------------------------------------------------------ */
+
 export type Link = {
   label: string;
   href: string;
@@ -16,6 +26,7 @@ export type Project = {
   venue: string;
   description: string;
   tools: string[];
+  /** Optional repository or write-up URL. When set, the title becomes a link. */
   href?: string;
 };
 
@@ -32,29 +43,39 @@ export type SkillGroup = {
   items: string[];
 };
 
+/* ------------------------------------------------------------------ */
+/* Profile: identity, contact details and the hero introduction        */
+/* ------------------------------------------------------------------ */
+
 export const profile = {
   name: "Dario Napolitano",
-  role: "Computer Science · Software Engineer",
+  role: "Computer Science - Software Engineer",
   location: "Milan, Italy",
   email: "darionapo2.0@gmail.com",
+  /** Kept for reference only, deliberately not rendered anywhere. */
   phone: "+39 388 259 1181",
   site: "darionapolitano.space",
   intro:
     "I build and measure systems: performance engineering by day, machine learning and self-hosted side projects by night. Currently finishing an MSc in Computer Science and Engineering at Politecnico di Milano while working as a performance engineer in Milan.",
 };
 
+/** Shown in the hero and repeated in the footer. */
 export const links: Link[] = [
   { label: "Email", href: `mailto:${profile.email}` },
-  { label: "GitHub", href: "https://github.com/darionapolitano" },
+  { label: "GitHub", href: "https://github.com/napolitanodario" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/darionapolitano" },
 ];
+
+/* ------------------------------------------------------------------ */
+/* Work: professional experience, most recent first                    */
+/* ------------------------------------------------------------------ */
 
 export const experience: Experience[] = [
   {
     company: "Moviri Consulting",
     role: "Performance Engineering",
     location: "Milan, Italy",
-    period: "Dec 2024 — Present",
+    period: "Dec 2024 - Present",
     highlights: [
       "Designed a scalable ETL pipeline streaming Dynatrace RUM data into Splunk, automating data analysis and reporting.",
       "Designed custom load testing scripts to benchmark the performance impact of a corporate antivirus solution in the banking industry.",
@@ -66,7 +87,7 @@ export const experience: Experience[] = [
     company: "searchingpatents.com",
     role: "Full Stack Developer",
     location: "Bologna, Italy",
-    period: "Oct 2022 — Sept 2025",
+    period: "Oct 2022 - Sept 2025",
     highlights: [
       "Built a custom Flask app for retrieval of patents data from the European Patent Office.",
       "Implemented automated report generation according to selectable preferences, decreasing report time by 90%.",
@@ -77,7 +98,7 @@ export const experience: Experience[] = [
     company: "Weflex Italia",
     role: "Technical Office",
     location: "Modena, Italy",
-    period: "Aug 2019 — Dec 2024",
+    period: "Aug 2019 - Dec 2024",
     highlights: [
       "Developed warehouse logistics layouts for more than 20 customers in the ceramic tile industry.",
       "Used real-time tracking systems and ERP software to improve merchandise management and movement.",
@@ -85,6 +106,10 @@ export const experience: Experience[] = [
     ],
   },
 ];
+
+/* ------------------------------------------------------------------ */
+/* Projects: academic and personal work                                */
+/* ------------------------------------------------------------------ */
 
 export const projects: Project[] = [
   {
@@ -98,12 +123,12 @@ export const projects: Project[] = [
     title: "Deep Learning Competitions",
     venue: "POLIMI",
     description:
-      "Two vision challenges — blood cell image classification and Martian terrain semantic segmentation. Transfer learning and fine tuning on CNNs and U-Nets for up to +20% accuracy and a top 10 leaderboard placement, plus ensembling, data augmentation, class rebalancing and loss tuning to handle rare classes.",
+      "Two vision challenges: blood cell image classification and Martian terrain semantic segmentation. Transfer learning and fine tuning on CNNs and U-Nets for up to +20% accuracy and a top 10 leaderboard placement, plus ensembling, data augmentation, class rebalancing and loss tuning to handle rare classes.",
     tools: ["TensorFlow", "PyTorch", "Keras", "OpenCV", "scikit-learn"],
   },
   {
     title: "Visual Impairment Assistant",
-    venue: "Thesis project · UNIMORE ARSControl",
+    venue: "Thesis project, UNIMORE ARSControl",
     description:
       "A computer vision prototype helping visually impaired people navigate urban and domestic environments, running real-time stereo depth estimation and object detection on a Raspberry Pi 4.",
     tools: ["OpenCV", "TensorFlow", "Intel RealSense", "multiprocessing"],
@@ -123,7 +148,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    title: "Pantry & Recipes App",
+    title: "Pantry and Recipes App",
     venue: "POLIMI",
     description:
       "A Flutter mobile application for pantry tracking and smart recipe discovery, backed by Firebase and integrating Gemini AI and Spoonacular APIs, with extensive unit and integration testing.",
@@ -131,12 +156,16 @@ export const projects: Project[] = [
   },
 ];
 
+/* ------------------------------------------------------------------ */
+/* Education: degrees, most recent first                               */
+/* ------------------------------------------------------------------ */
+
 export const education: Education[] = [
   {
     degree: "MSc",
     institution: "Politecnico di Milano",
     field: "Computer Science and Engineering",
-    period: "Sept 2024 — Present",
+    period: "Sept 2024 - Present",
     notes: [
       "Deep Learning, Software Engineering, Compilers, NLP, Recommender Systems, Dynamic Programming, Control Systems.",
     ],
@@ -145,7 +174,7 @@ export const education: Education[] = [
     degree: "BSc",
     institution: "University of Modena and Reggio Emilia",
     field: "Computer Engineering",
-    period: "Sept 2021 — Oct 2024",
+    period: "Sept 2021 - Oct 2024",
     notes: [
       "Linear Algebra, Physics, Computer Architecture, OOP, Telecommunications, IoT, Computer Vision.",
       "Erasmus+ mobility at Loyola University, Seville, Spain.",
@@ -153,12 +182,20 @@ export const education: Education[] = [
   },
 ];
 
+/* ------------------------------------------------------------------ */
+/* Self-hosting: services running on the home Raspberry Pi             */
+/* ------------------------------------------------------------------ */
+
 export const selfHosting: string[] = [
   "Personal finance manager",
   "Progressive overload training tracker",
   "Personal website",
   "Cloud photos sync",
 ];
+
+/* ------------------------------------------------------------------ */
+/* Skills: rendered as label plus comma separated list                 */
+/* ------------------------------------------------------------------ */
 
 export const skills: SkillGroup[] = [
   {
@@ -212,6 +249,6 @@ export const skills: SkillGroup[] = [
   },
   {
     label: "Languages",
-    items: ["English — C1, IELTS 8/9", "Spanish — B2", "Italian — native"],
+    items: ["English: C1, IELTS 8/9", "Spanish: B2", "Italian: native"],
   },
 ];
