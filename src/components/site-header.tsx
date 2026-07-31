@@ -1,45 +1,49 @@
-import { ThemeToggle } from "@/components/theme-toggle";
-import { profile } from "@/content/resume";
+import Link from "next/link";
 
-/** Anchors matching the section ids declared in src/app/page.tsx. */
-const nav = [
-  { label: "Work", href: "#work" },
-  { label: "Projects", href: "#projects" },
-  { label: "Education", href: "#education" },
-  { label: "Contact", href: "#contact" },
-];
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Container } from "@/components/container";
+import { profile } from "@/content/resume";
+import { cvSectionHref, cvSections } from "@/content/sections";
 
 /*
- * Sticky top bar. The translucent background plus backdrop blur keeps the
- * paper colour visible while content scrolls underneath. Section links are
- * hidden on small screens, where the page is short enough to just scroll.
+ * Sticky top bar, identical on every page. It always lists the CV sections,
+ * so the full scope of the site is visible even from the bare home page.
+ * Links point at /cv anchors: from the home page that is a navigation, from
+ * the CV page it is a scroll to the matching section.
+ *
+ * The bar wraps instead of hiding links on narrow screens, because losing the
+ * titles is exactly what this navigation is meant to avoid.
  */
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-10 border-b border-rule bg-paper/85 backdrop-blur">
-      <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
-        <a
-          href="#top"
+      <Container className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3 py-4">
+        <Link
+          href="/"
           className="label text-ink transition-colors hover:text-accent"
         >
           {profile.name}
-        </a>
-        <nav className="flex items-center gap-5">
-          <ul className="hidden items-center gap-5 sm:flex">
-            {nav.map((item) => (
-              <li key={item.href}>
-                <a
-                  href={item.href}
+        </Link>
+
+        <nav
+          aria-label="Curriculum sections"
+          className="flex items-center gap-x-5 gap-y-2"
+        >
+          <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            {cvSections.map((section) => (
+              <li key={section.id}>
+                <Link
+                  href={cvSectionHref(section.id)}
                   className="label text-ink-muted transition-colors hover:text-accent"
                 >
-                  {item.label}
-                </a>
+                  {section.title}
+                </Link>
               </li>
             ))}
           </ul>
           <ThemeToggle />
         </nav>
-      </div>
+      </Container>
     </header>
   );
 }

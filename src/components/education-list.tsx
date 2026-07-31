@@ -10,11 +10,11 @@ export function EducationList() {
       {education.map((entry) => (
         <article key={entry.institution}>
           <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-            <h3 className="font-serif text-2xl">{entry.institution}</h3>
+            <h3 className="font-serif text-3xl">{entry.institution}</h3>
             <p className="label text-ink-faint">{entry.period}</p>
           </header>
 
-          <p className="mt-1 text-sm text-ink-muted">
+          <p className="mt-2 text-ink-muted">
             {entry.degree} - {entry.field}
           </p>
 
