@@ -34,7 +34,7 @@ src/
   app/
     layout.tsx        fonts, metadata, theme anti-flash script
     page.tsx          minimal home page
-    resume/page.tsx   full curriculum, one section per anchor
+    resume/page.tsx   full resume, one section per anchor
     globals.css       design tokens, light and dark themes
   components/         header, hero, section blocks, footer, theme toggle
   content/

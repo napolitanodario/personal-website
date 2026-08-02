@@ -21,7 +21,7 @@ export function Hero() {
         width={320}
         height={320}
         priority
-        className="size-28 rounded-full object-cover object-top ring-1 ring-rule md:size-36"
+        className="size-32 rounded-full object-cover object-top ring-1 ring-rule md:size-40"
       />
 
       <p className="label mt-8 text-accent">{profile.role}</p>
@@ -30,7 +30,7 @@ export function Hero() {
         {profile.name}
       </h1>
 
-      <p className="mt-6 max-w-2xl text-xl leading-relaxed text-ink-muted text-pretty">
+      <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-muted text-pretty">
         {profile.intro}
       </p>
 
@@ -42,6 +42,7 @@ export function Hero() {
             <a
               key={link.href}
               href={link.href}
+              download={link.download}
               target={isExternal ? "_blank" : undefined}
               rel={isExternal ? "noreferrer" : undefined}
               className="label border-b border-rule pb-1 text-ink transition-colors hover:border-accent hover:text-accent"

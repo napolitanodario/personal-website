@@ -1,66 +1,24 @@
 @import "tailwindcss";
 
 /* ==================================================================
-   Design tokens: light theme (default)
-   Warm paper background, near black ink, terracotta accent.
+   Design tokens (default). The shuffle button overrides these via
+   inline CSS variables on <html>; see src/lib/palette.ts.
    ================================================================== */
 
 :root {
-  --paper: #faf8f4;
-  --paper-raised: #f3efe7;
-  --ink: #16140e;
-  --ink-muted: #555046;
-  --ink-faint: #7e7768;
-  --rule: #ded6c6;
-  --accent: #a5462a;
-}
-
-/* ==================================================================
-   Design tokens: dark theme, applied when the operating system asks
-   for it and no explicit user choice is stored.
-   ================================================================== */
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #12110f;
-    --paper-raised: #1c1a16;
-    --ink: #f0ebe1;
-    --ink-muted: #b0a99b;
-    --ink-faint: #837c6f;
-    --rule: #322e27;
-    --accent: #e89670;
-  }
-}
-
-/* ==================================================================
-   Manual override. The theme toggle writes data-theme on the html
-   element, which wins over the media query above.
-   ================================================================== */
-
-:root[data-theme="light"] {
-  --paper: #faf8f4;
-  --paper-raised: #f3efe7;
-  --ink: #16140e;
-  --ink-muted: #555046;
-  --ink-faint: #7e7768;
-  --rule: #ded6c6;
-  --accent: #a5462a;
-}
-
-:root[data-theme="dark"] {
-  --paper: #12110f;
-  --paper-raised: #1c1a16;
-  --ink: #f0ebe1;
-  --ink-muted: #b0a99b;
-  --ink-faint: #837c6f;
-  --rule: #322e27;
-  --accent: #e89670;
+  --paper: #f4f1ea;
+  --paper-raised: #ebe6dc;
+  --ink: #1a1814;
+  --ink-muted: #5a544a;
+  --ink-faint: #7a7368;
+  --rule: #d8d0c4;
+  --accent: #2a5f7a;
 }
 
 /* ==================================================================
    Tailwind theme mapping. Exposing the variables here is what makes
    utilities such as bg-paper, text-ink or border-rule available,
-   and lets a single variable change repaint both themes.
+   and lets a single variable change repaint the whole site.
    Fonts are injected by next/font in the root layout.
    ================================================================== */
 
@@ -85,20 +43,35 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* Lets the browser render native widgets and scrollbars to match. */
-    color-scheme: light dark;
+    color-scheme: light;
+  }
+
+  html[data-scheme="dark"] {
+    color-scheme: dark;
   }
 
   body {
     background-color: var(--paper);
     color: var(--ink);
-    /* Slightly above the 16px default: the measure is wide and the page is
-       mostly long form text, so the extra size and leading pay off. */
-    font-size: 1.0625rem;
+    font-size: 1rem;
     line-height: 1.65;
-    /* Inter stylistic sets: single storey a, open digits, plain l. */
     font-feature-settings: "cv02", "cv03", "cv04";
     text-rendering: optimizeLegibility;
+    transition:
+      background-color 0.35s ease,
+      color 0.35s ease;
+  }
+
+  /*
+   * Titles take the shuffled accent so each press repaints headings
+   * as well as the page wash. Body copy stays on --ink for contrast.
+   */
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--accent);
+    transition: color 0.35s ease;
   }
 
   ::selection {
@@ -111,6 +84,14 @@
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  h4 {
+    transition: none;
   }
 }
 
@@ -151,18 +132,19 @@
  */
 @utility label {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 /*
  * Larger sibling of label, used for the titles of the CV sections.
- * Big enough to read as a heading rather than as a caption.
+ * Sits between captions and body so section names read as headings
+ * without overpowering the serif entry titles.
  */
 @utility label-lg {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.9375rem;
-  letter-spacing: 0.12em;
+  font-size: 1.0625rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }

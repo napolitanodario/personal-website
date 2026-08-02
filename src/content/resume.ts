@@ -11,6 +11,8 @@
 export type Link = {
   label: string;
   href: string;
+  /** When set, the browser downloads the file instead of navigating. */
+  download?: string | boolean;
 };
 
 /*
@@ -53,17 +55,24 @@ export type Experience = {
 export type Project = {
   title: string;
   venue: string;
-  description: string;
+  /** One string, or several paragraphs shown with a blank line between them. */
+  description: string | string[];
   tools: string[];
   /** Optional repository or write-up URL. When set, the title becomes a link. */
   href?: string;
+  /** Optional figure shown after the description once expanded. */
+  image?: {
+    src: string;
+    alt: string;
+  };
 };
 
 export type Education = {
   degree: string;
   institution: string;
-  field: string;
-  period: string;
+  /** Optional; omitted for entries such as exchange stays. */
+  field?: string;
+  period?: string;
   notes: string[];
 };
 
@@ -83,16 +92,21 @@ export const profile = {
   email: "darionapo2.0@gmail.com",  
   /** Kept for reference only, deliberately not rendered anywhere. */
   phone: "+39 388 259 1181",
-  site: "darionapolitano.space",
+  site: "napolitanodar.io",
   intro:
-    "Hi! I'm Computer Science and Engineering student at Politecnico of Milan. Alongside my studies, I work as a performance engineer at Moviri and have worked on projects in Computer Vision and Deep Learning. Lately, I've been having fun experimenting with Rust and the world of self-hosting. You're welcome to poke around and learn more about my academic and professional journey.",
+    "Hi! I'm a Computer Science and Engineering student at Politecnico di Milano. Alongside my studies I've worked as a performance engineer, and on projects in computer vision and deep learning. Lately I've been having fun with Rust and self-hosting. You're welcome to poke around and learn more about my academic and professional journey.",
 }; 
 
 /** Shown in the hero and repeated in the footer. */
 export const links: Link[] = [
   { label: "Email", href: `mailto:${profile.email}` },
   { label: "GitHub", href: "https://github.com/napolitanodario" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/darionapolitano" },
+  { label: "LinkedIn", href: "https://linkedin.com/in/napolitanodario" },
+  {
+    label: "PDF resume",
+    href: "/Dario_Napolitano_Resume.pdf",
+    download: "Dario_Napolitano_Resume.pdf",
+  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -169,6 +183,16 @@ export const experience: Experience[] = [
       "Took part in international projects in the US.",
     ],
   },
+  {
+    company: "Kodland Italy",
+    role: "Programming Teacher",
+    location: "Italy, Remote",
+    period: "Sept 2022 - Oct 2023",
+    highlights: [
+      "Conducted weekly online Python lectures for classes of 7 to 13 students.",
+      "Contributed to the organized structure of a multinational company.",
+    ],
+  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -179,47 +203,50 @@ export const projects: Project[] = [
   {
     title: "Arduino Hackathon",
     venue: "POLIMI NECSTLab",
-    href: "https://github.com/napolitanodario/SafeNet-Arduino-hackaton",
     description: [
       "SafeNet is a home safety system built for the Arduino UNO Q hackathon at POLIMI NECSTLab. The board splits work across two processors. The Linux MPU runs Python for audio processing, machine learning, cloud synchronization, and a REST API. The STM32 MCU drives the reed switch, PIR sensor, LEDs, buzzer, and RFID reader over GPIO and SPI. The two sides communicate through the Arduino Bridge, a MessagePack-RPC channel over a Unix socket.",
       "Entry and exit events are inferred from the temporal order of reed and PIR activations. An RFID badge arms and disarms the system. When armed, on-device keyword spotting listens for the Italian word \"aiuto\" on a USB microphone and can trigger a local alarm plus a Telegram notification.",
       "Anomaly detection uses two complementary models. An Isolation Forest flags unusual entry and exit times from features such as hour of day, weekday, and elapsed time since the previous event. A separate absence model estimates expected return windows per time bucket from historical exit-entry pairs and raises an alert when a return is overdue. Both models retrain periodically on a sliding window of logged events.",
       "Firebase Realtime Database synchronizes device status, events, and remote commands. A web dashboard and a Telegram bot can arm the system, enable or disable detectors, and dismiss an overdue absence. The device publishes state and polls commands, so it does not require inbound network access.",
-    ].join("\n\n"),
+    ],
     tools: ["Arduino UNO Q", "scikit-learn", "Firebase", "Flask"],
+    href: "https://github.com/napolitanodario/SafeNet-Arduino-hackaton",
   },
   {
     title: "Deep Learning Competitions",
     venue: "POLIMI",
-    href: "https://github.com/napolitanodario/ANNDL-competition-2024",
     description: [
       "Two computer vision competitions from the Politecnico di Milano ANNDL course: blood cell classification and Martian terrain semantic segmentation.",
       "The classification task assigns 13,759 RGB images of size 96x96 to eight blood cell classes. Perceptual hashing removed about 1,800 near-duplicate training samples. Transfer learning improved accuracy from 42% to 62%. An ensemble of two models then reached 70% on the hidden test set. On this dataset, MobileNetV2 often outperformed much larger architectures such as ConvNeXtBase. Simple geometric and photometric augmentations helped, while aggressive policies such as MixUp and RandAugment often reduced accuracy.",
       "The segmentation task labels grayscale 64x128 Mars images into five terrain classes. The training set contains 2,615 annotated frames against 10,022 unlabeled test images, with strong class imbalance. Duplicating the rarest class before training improved U-Net performance by about 9%. Focal loss with gamma 2 produced more balanced results than Dice or Jaccard losses. Excluding the background class from the loss avoided an mIoU drop larger than 10%.",
       "U-Net and U-Net++ with a MobileNetV2 encoder outperformed DeepLabV3+, SegFormer, PSPNet, and FPN in our experiments. A four-model ensemble raised mIoU from 66.0% to 68.4%, for a final ranking of 19th out of 197 teams.",
-    ].join("\n\n"),
+    ],
     tools: ["TensorFlow", "PyTorch", "Keras", "OpenCV", "scikit-learn"],
+    href: "https://github.com/napolitanodario/ANNDL-competition-2024",
   },
   {
     title: "Visual Impairment Assistant",
     venue: "Thesis project, UNIMORE ARSControl",
-    href: "https://github.com/napolitanodario/visual-impaiment-assistant",
     description: [
       "Bachelor thesis prototype for assistive navigation of visually impaired users in indoor and outdoor environments. The wearable setup runs on a Raspberry Pi 4 with an Intel RealSense D415, which provides synchronized RGB frames and active stereo depth maps.",
       "The runtime is a three-process pipeline connected by bounded multiprocessing queues. A stream reader captures coherent depth and color frames from the camera. Obstacle detection thresholds depth between 0.4 m and 1.5 m, applies morphological closing, extracts contours, and tracks nearby obstacles by centroid. Object detection runs a lightweight detector on RGB frames and associates bounding boxes with depth obstacles by center proximity. Fused alerts report object class, coarse image-plane position, and distance.",
       "On the Raspberry Pi 4, obstacle detection reached about 7 frames per second, roughly 18 times faster than object detection on the same board. That trade-off was acceptable because text-to-speech alerts only need to fire every few tens of seconds. The thesis target model was EfficientDet-Lite0 in TensorFlow Lite. The public reference implementation uses YOLOv8 Nano for desktop demos.",
-    ].join("\n\n"),
+    ],
     tools: ["OpenCV", "TensorFlow", "Intel RealSense", "multiprocessing"],
+    href: "https://github.com/napolitanodario/visual-impaiment-assistant",
+    image: {
+      src: "/processing_schema.png",
+      alt: "Processing schema of the visual impairment assistant: RealSense depth and RGB queues, obstacle and object detection pipelines, matching, and speech output.",
+    },
   },
   {
     title: "Natural Language Processing Competition",
     venue: "POLIMI",
-    href: "https://github.com/napolitanodario/NLP-project-submission",
     description: [
       "End-to-end multimodal study on the NIH Chest X-ray 14 dataset. The main table contains 112,120 samples with 512-dimensional BiomedCLIP image and text embeddings, view position, and 15 pathology labels. The label distribution is strongly imbalanced: No Finding alone accounts for more than half of the rows.",
       "Classical retrieval covers BM25, TF-IDF, and Word2Vec over radiology-style prompts. Image embeddings are indexed in ChromaDB with cosine similarity for text, image, and raw-vector queries. Classification ranges from multilayer perceptrons on frozen embeddings to DenseNet121 fine-tuned on a class-balanced image subset. Embedding-based models reach high mAUROC, but exact multilabel F1 remains low when rare pathologies dominate the error.",
       "For captioning, a CLIP-prefix GPT-2 mapper generates short pathology descriptions from image embeddings. LoRA fine-tuning of MedGemma 4B improved label F1 to about 0.47 on a 100-sample evaluation. Qwen 2.5-VL 3B and 7B were fine-tuned on the same image-pathology pairs with lower F1 on that check. Overall, the project is most useful as a comparative study of retrieval, class imbalance, and medical vision-language captioning.",
-    ].join("\n\n"),
+    ],
     tools: [
       "PyTorch",
       "TensorFlow",
@@ -228,18 +255,39 @@ export const projects: Project[] = [
       "CLIP",
       "scikit-learn",
     ],
+    href: "https://github.com/napolitanodario/NLP-project-submission",
   },
   {
     title: "Pantry and Recipes App",
     venue: "POLIMI",
-    href: "https://github.com/napolitanodario/DIMA-PantryDish-documentation",
     description: [
       "PantryDish is a Flutter application for iOS and Android that recommends recipes from ingredients already available at home. It combines a virtual pantry, expiry notifications, and preference-aware recipe discovery to reduce food waste.",
       "Ingredients can be added manually, from fridge or pantry photos, or from receipt OCR. Gemini performs ingredient recognition on those images and receipts and pre-fills product names, quantities, and storage areas. Spoonacular provides recipe search, details, and recommendations filtered by the current pantry and by diet, allergies, cuisine, and difficulty preferences.",
       "The UI centers on a swipe-based recipe feed, with saved recipes, pantry management, and a profile screen. Firebase Authentication manages accounts. Firestore persists profiles, pantry items, and saved recipes. Firebase Cloud Messaging and local notifications deliver expiry reminders. Remote Config exposes maintenance mode and forced-upgrade flags.",
       "The application source is private for the course, while the public design docs describe an MVC architecture with Riverpod for state management. The test suite includes 96 unit tests, 146 widget tests, and 22 integration tests covering authentication, pantry CRUD, swipe flows, vision and OCR paths, and profile settings.",
-    ].join("\n\n"),
+    ],
     tools: ["Flutter", "Gemini API", "Firebase", "Spoonacular"],
+    href: "https://github.com/napolitanodario/DIMA-PantryDish-documentation",
+  },
+  {
+    title: "AI Dobble - Card Recognition",
+    venue: "Loyola University",
+    description: [
+      "Computer vision project that recognises Dobble (Spot It!) cards from photos or a live camera and finds the shared symbol between two cards. Built a small dataset from scanned sheets (grid-cropped into single cards), then expanded it with brightness, shift and zoom augmentations plus full rotations at training time.",
+      "A Keras CNN (four Conv2D + MaxPool blocks, dropout, dense head) classifies among 29 card classes; predicted labels are mapped to symbol sets so the intersection yields the matching icon. A live OpenCV demo detects circular cards in the frame, runs the model and overlays the common symbol.",
+    ],
+    tools: ["Python", "Keras", "TensorFlow", "OpenCV", "scikit-learn"],
+    href: "https://github.com/napolitanodario/ai-dobble-v3",
+  },
+  {
+    title: "Neural Network from Scratch",
+    venue: "Loyola University",
+    description: [
+      "Project to build and train feed-forward networks without deep learning frameworks: only Python and NumPy. The code models the stack as Neuron, Layer and Network classes so architectures can be declared as a list of layer sizes and activation names, then wired with weights and biases at construction time.",
+      "Training implements forward propagation, backpropagation of squared error, per-neuron gradient accumulation and weight updates with a configurable learning rate. Activations include sigmoid, identity and softmax (with matching derivatives); weights can be drawn from a scaled normal distribution or set by hand for small demos. A digits loader reads 16x16 patterns (256 inputs, 10 one-hot outputs) from the bundled dataset, alongside smaller toy shapes used to check the math by hand.",
+    ],
+    tools: ["Python", "NumPy"],
+    href: "https://github.com/napolitanodario/ML-neural-network-from-scratch",
   },
 ];
 
@@ -263,9 +311,15 @@ export const education: Education[] = [
     field: "Computer Engineering",
     period: "Sept 2021 - Oct 2024",
     notes: [
-      "Linear Algebra, Physics, Computer Architecture, OOP, Telecommunications, IoT, Computer Vision.",
-      "Erasmus+ mobility at Loyola University, Seville, Spain.",
+      "Linear Algebra, Physics, Computer Architecture, OOP, Telecommunications, IoT.",
     ],
+  },
+  {
+    degree: "Erasmus+ mobility",
+    institution: "Loyola University Andalucia",
+    field: "Seville, Spain",
+    period: "Sept 2022 - Feb 2024",
+    notes: ["Machine Learning, Computer Vision."],
   },
 ];
 
@@ -286,20 +340,20 @@ export const selfHosting: string[] = [
 
 export const skills: SkillGroup[] = [
   {
-    label: "Programming",
+    label: "Languages",
     items: [
       "Python",
       "JavaScript",
-      "C/C++",
+      "C",
+      "C++",
       "Java",
       "Bash",
       "SQL",
       "MATLAB",
-      "Rust",
     ],
   },
   {
-    label: "Frameworks",
+    label: "AI & Data",
     items: [
       "NumPy",
       "pandas",
@@ -307,27 +361,23 @@ export const skills: SkillGroup[] = [
       "TensorFlow",
       "Keras",
       "OpenCV",
-      "Angular",
-      "Flask",
-      "Flutter",
-      "Django",
-      "Grafana",
-      "K6",
     ],
   },
   {
-    label: "Technologies",
+    label: "Frameworks",
+    items: ["Django", "Flask", "Angular", "Flutter"],
+  },
+  {
+    label: "DevOps & Observability",
     items: [
-      "NeoLoad",
-      "ERP",
-      "OpenTelemetry",
-      "Splunk",
-      "Kubernetes",
       "Docker",
-      "Dynatrace",
+      "Kubernetes",
       "AWS",
-      "AutoCAD",
       "Terraform",
+      "OpenTelemetry",
+      "Grafana",
+      "Splunk",
+      "Dynatrace",
     ],
   },
   {
@@ -335,7 +385,11 @@ export const skills: SkillGroup[] = [
     items: ["Dynatrace Associate"],
   },
   {
-    label: "Languages",
-    items: ["English: C1, IELTS 8/9", "Spanish: B2", "Italian: native"],
+    label: "Spoken languages",
+    items: [
+      "English: C1 (IELTS 8/9)",
+      "Spanish: B2",
+      "Italian: Native speaker",
+    ],
   },
 ];

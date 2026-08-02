@@ -17,10 +17,10 @@ export function Section({ id, title, children }: SectionProps) {
   return (
     <section
       id={id}
-      className="scroll-mt-24 border-t border-rule py-16 md:py-24"
+      className="scroll-mt-24 border-t border-rule py-12 md:py-16"
     >
-      <div className="grid gap-8 md:grid-cols-[11rem_1fr] md:gap-14">
-        <h2 className="label-lg text-ink md:sticky md:top-28 md:self-start">
+      <div className="grid gap-6 md:grid-cols-[10rem_1fr] md:gap-12">
+        <h2 className="label-lg md:sticky md:top-28 md:self-start">
           {title}
         </h2>
         <div>{children}</div>

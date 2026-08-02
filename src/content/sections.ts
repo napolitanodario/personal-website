@@ -1,7 +1,7 @@
 /**
- * The sections of the CV, in the order they appear on the /resume page.
+ * The sections of the resume, in the order they appear on the /resume page.
  * One list drives both the navigation in the site header and the anchor
- * ids the CV page scrolls to, so the two can never drift apart.
+ * ids the resume page scrolls to, so the two can never drift apart.
  */
 export type CvSection = {
   /** Anchor id on the /resume page. */
@@ -13,12 +13,10 @@ export const cvSections: CvSection[] = [
   { id: "work", title: "Work" },
   { id: "projects", title: "Projects" },
   { id: "education", title: "Education" },
-  { id: "selfhosting", title: "Self-hosting" },
   { id: "skills", title: "Skills" },
-  { id: "contact", title: "Contact" },
 ];
 
-/** Link to a section of the CV page from anywhere in the site. */
+/** Link to a section of the resume page from anywhere in the site. */
 export function cvSectionHref(id: string): string {
   return `/resume#${id}`;
 }
