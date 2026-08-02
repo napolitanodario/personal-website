@@ -1,6 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 
-import { links, profile } from "@/content/resume";
+import { introParts, links, profile } from "@/content/resume";
+
+const introLinkClassName =
+  "text-ink underline decoration-rule underline-offset-4 transition-colors hover:text-accent hover:decoration-accent";
 
 /*
  * The entire content of the home page: portrait, role, name, introduction
@@ -31,7 +35,31 @@ export function Hero() {
       </h1>
 
       <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-muted text-pretty">
-        {profile.intro}
+        {introParts.map((part, index) => {
+          if (part.type === "text") {
+            return <span key={index}>{part.text}</span>;
+          }
+
+          if (part.external) {
+            return (
+              <a
+                key={index}
+                href={part.href}
+                target="_blank"
+                rel="noreferrer"
+                className={introLinkClassName}
+              >
+                {part.text}
+              </a>
+            );
+          }
+
+          return (
+            <Link key={index} href={part.href} className={introLinkClassName}>
+              {part.text}
+            </Link>
+          );
+        })}
       </p>
 
       <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">

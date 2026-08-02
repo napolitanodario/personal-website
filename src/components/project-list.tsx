@@ -27,22 +27,60 @@ function paragraphsOf(description: Project["description"]): string[] {
   return Array.isArray(description) ? description : [description];
 }
 
+/*
+ * Max height matches Visual Impairment's processing_schema (2501x1442) at full
+ * column width. Taller images shrink in width and stay centered.
+ */
+const PREVIEW_MAX_HEIGHT = "max-h-[calc(100cqi*1442/2501)]";
+
+function ProjectPreviews({ images }: { images: NonNullable<Project["images"]> }) {
+  const multi = images.length > 1;
+
+  return (
+    <div
+      className={
+        multi
+          ? "mt-5 grid gap-3 sm:grid-cols-2"
+          : "mt-5"
+      }
+    >
+      {images.map((image) => (
+        <figure
+          key={image.src}
+          className="@container flex w-full justify-center"
+        >
+          <Image
+            src={image.src}
+            alt={image.alt}
+            width={2501}
+            height={1442}
+            unoptimized
+            sizes={
+              multi
+                ? "(max-width: 640px) 100vw, 28rem"
+                : "(max-width: 768px) 100vw, 48rem"
+            }
+            className={`h-auto w-auto max-w-full ${PREVIEW_MAX_HEIGHT}`}
+          />
+        </figure>
+      ))}
+    </div>
+  );
+}
+
 function ExpandableDescription({
   description,
-  image,
 }: {
   description: Project["description"];
-  image?: Project["image"];
 }) {
   const paragraphs = paragraphsOf(description);
   const fullText = paragraphs.join(" ");
   const [expanded, setExpanded] = useState(false);
   const collapsible = fullText.length > COLLAPSE_AFTER_CHARS;
-
   const collapsed = collapsible && !expanded;
 
   return (
-    <div className="mt-3">
+    <div className="mt-5">
       <div className="relative">
         <div
           className={`space-y-4 ${
@@ -62,18 +100,6 @@ function ExpandableDescription({
         </div>
       </div>
 
-      {(expanded || !collapsible) && image ? (
-        <figure className="mt-6">
-          <Image
-            src={image.src}
-            alt={image.alt}
-            width={1600}
-            height={900}
-            className="h-auto w-full border border-rule"
-          />
-        </figure>
-      ) : null}
-
       {collapsible ? (
         <button
           type="button"
@@ -88,10 +114,9 @@ function ExpandableDescription({
 }
 
 /*
- * Project showcase. Mirrors the layout of the work section, with the venue
- * in place of the period and a row of tool tags closing each entry.
- * When a project has a GitHub href, an icon beside the title opens the repo.
- * Long descriptions collapse behind read more so the section stays scannable.
+ * Project showcase. Title and venue first, then an optional preview strip,
+ * then the expandable write-up and tool tags. Previews stay visible so the
+ * list can be scanned without opening every entry.
  */
 export function ProjectList() {
   return (
@@ -116,10 +141,11 @@ export function ProjectList() {
             <p className="label text-ink-faint">{project.venue}</p>
           </header>
 
-          <ExpandableDescription
-            description={project.description}
-            image={project.image}
-          />
+          {project.images && project.images.length > 0 ? (
+            <ProjectPreviews images={project.images} />
+          ) : null}
+
+          <ExpandableDescription description={project.description} />
 
           <ul className="mt-4 flex flex-wrap gap-2">
             {project.tools.map((tool) => (

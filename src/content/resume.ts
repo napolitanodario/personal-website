@@ -15,6 +15,11 @@ export type Link = {
   download?: string | boolean;
 };
 
+/** Rich intro segments for the home page: plain text or inline links. */
+export type IntroPart =
+  | { type: "text"; text: string }
+  | { type: "link"; text: string; href: string; external?: boolean };
+
 /*
  * One project inside a position, told as prose rather than as bullets. The four
  * fields are the four beats of a case study and each one is titled on the page,
@@ -60,11 +65,11 @@ export type Project = {
   tools: string[];
   /** Optional repository or write-up URL. When set, the title becomes a link. */
   href?: string;
-  /** Optional figure shown after the description once expanded. */
-  image?: {
+  /** Optional preview figures shown under the title, before the description. */
+  images?: {
     src: string;
     alt: string;
-  };
+  }[];
 };
 
 export type Education = {
@@ -76,9 +81,11 @@ export type Education = {
   notes: string[];
 };
 
+export type SkillItem = string | { label: string; href: string };
+
 export type SkillGroup = {
   label: string;
-  items: string[];
+  items: SkillItem[];
 };
 
 /* ------------------------------------------------------------------ */
@@ -95,7 +102,43 @@ export const profile = {
   site: "napolitanodar.io",
   intro:
     "Hi! I'm a Computer Science and Engineering student at Politecnico di Milano. Alongside my studies I've worked as a performance engineer, and on projects in computer vision and deep learning. Lately I've been having fun with Rust and self-hosting. You're welcome to poke around and learn more about my academic and professional journey.",
-}; 
+};
+
+/** Home intro with inline links; keep in sync with profile.intro for metadata. */
+export const introParts: IntroPart[] = [
+  {
+    type: "text",
+    text: "Hi! I'm a Computer Science and Engineering student at ",
+  },
+  {
+    type: "link",
+    text: "Politecnico di Milano",
+    href: "https://www.polimi.it/en/",
+    external: true,
+  },
+  {
+    type: "text",
+    text: ". Alongside my studies I've worked as a ",
+  },
+  {
+    type: "link",
+    text: "performance engineer",
+    href: "/resume#work",
+  },
+  {
+    type: "text",
+    text: ", and on ",
+  },
+  {
+    type: "link",
+    text: "projects",
+    href: "/resume#projects",
+  },
+  {
+    type: "text",
+    text: " in computer vision and deep learning. Lately I've been having fun with Rust and self-hosting. You're welcome to poke around and learn more about my academic and professional journey.",
+  },
+];
 
 /** Shown in the hero and repeated in the footer. */
 export const links: Link[] = [
@@ -211,6 +254,12 @@ export const projects: Project[] = [
     ],
     tools: ["Arduino UNO Q", "scikit-learn", "Firebase", "Flask"],
     href: "https://github.com/napolitanodario/SafeNet-Arduino-hackaton",
+    images: [
+      {
+        src: "/arduino_hackaton.jpg",
+        alt: "Arduino UNO Q hackathon desk with breadboard, RFID reader and wiring for SafeNet.",
+      },
+    ],
   },
   {
     title: "Deep Learning Competitions",
@@ -223,6 +272,12 @@ export const projects: Project[] = [
     ],
     tools: ["TensorFlow", "PyTorch", "Keras", "OpenCV", "scikit-learn"],
     href: "https://github.com/napolitanodario/ANNDL-competition-2024",
+    images: [
+      {
+        src: "/segformer.jpg",
+        alt: "SegFormer encoder-decoder architecture diagram used in the deep learning competitions.",
+      },
+    ],
   },
   {
     title: "Visual Impairment Assistant",
@@ -234,10 +289,12 @@ export const projects: Project[] = [
     ],
     tools: ["OpenCV", "TensorFlow", "Intel RealSense", "multiprocessing"],
     href: "https://github.com/napolitanodario/visual-impaiment-assistant",
-    image: {
-      src: "/processing_schema.png",
-      alt: "Processing schema of the visual impairment assistant: RealSense depth and RGB queues, obstacle and object detection pipelines, matching, and speech output.",
-    },
+    images: [
+      {
+        src: "/processing_schema.png",
+        alt: "Processing schema of the visual impairment assistant: RealSense depth and RGB queues, obstacle and object detection pipelines, matching, and speech output.",
+      },
+    ],
   },
   {
     title: "Natural Language Processing Competition",
@@ -268,6 +325,12 @@ export const projects: Project[] = [
     ],
     tools: ["Flutter", "Gemini API", "Firebase", "Spoonacular"],
     href: "https://github.com/napolitanodario/DIMA-PantryDish-documentation",
+    images: [
+      {
+        src: "/PantryDish_screens.png",
+        alt: "PantryDish mobile screens: recipe feed, pantry, saved recipes and profile preferences.",
+      },
+    ],
   },
   {
     title: "AI Dobble - Card Recognition",
@@ -278,6 +341,12 @@ export const projects: Project[] = [
     ],
     tools: ["Python", "Keras", "TensorFlow", "OpenCV", "scikit-learn"],
     href: "https://github.com/napolitanodario/ai-dobble-v3",
+    images: [
+      {
+        src: "/dobble_augmentations_cover.png",
+        alt: "Grid of Dobble cards with lighting and geometry augmentations used for training.",
+      },
+    ],
   },
   {
     title: "Neural Network from Scratch",
@@ -288,6 +357,12 @@ export const projects: Project[] = [
     ],
     tools: ["Python", "NumPy"],
     href: "https://github.com/napolitanodario/ML-neural-network-from-scratch",
+    images: [
+      {
+        src: "/neural_network_digits.png",
+        alt: "Diagram of a feed-forward network classifying handwritten digits from flattened pixels.",
+      },
+    ],
   },
 ];
 
@@ -382,7 +457,12 @@ export const skills: SkillGroup[] = [
   },
   {
     label: "Certifications",
-    items: ["Dynatrace Associate"],
+    items: [
+      {
+        label: "Dynatrace Associate",
+        href: "https://www.credly.com/badges/0b181577-8c5a-4faf-a78a-82ece15f6c2d/public_url",
+      },
+    ],
   },
   {
     label: "Spoken languages",

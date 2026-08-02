@@ -1,4 +1,9 @@
 import { skills } from "@/content/resume";
+import type { SkillItem } from "@/content/resume";
+
+function skillLabel(item: SkillItem): string {
+  return typeof item === "string" ? item : item.label;
+}
 
 /*
  * Skills, certifications and languages as a definition list: the group name
@@ -12,7 +17,23 @@ export function SkillList() {
         <div key={group.label} className="grid gap-2">
           <dt className="label text-ink-faint">{group.label}</dt>
           <dd className="leading-relaxed text-pretty">
-            {group.items.join(", ")}
+            {group.items.map((item, index) => (
+              <span key={skillLabel(item)}>
+                {index > 0 ? ", " : null}
+                {typeof item === "string" ? (
+                  item
+                ) : (
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline decoration-rule underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
+                  >
+                    {item.label}
+                  </a>
+                )}
+              </span>
+            ))}
           </dd>
         </div>
       ))}
