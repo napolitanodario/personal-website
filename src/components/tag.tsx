@@ -4,7 +4,7 @@
  */
 export function Tag({ children }: { children: string }) {
   return (
-    <li className="label rounded-full border border-rule bg-paper-raised px-3 py-1 text-ink-muted">
+    <li className="label rounded-full border border-rule bg-paper-raised px-2 py-0.5 text-ink-muted sm:px-3 sm:py-1">
       {children}
     </li>
   );

@@ -6,26 +6,28 @@ import { education } from "@/content/resume";
  */
 export function EducationList() {
   return (
-    <div className="space-y-15">
+    <div className="space-y-10 sm:space-y-15">
       {education.map((entry) => (
         <article key={entry.institution}>
-          <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-            <h3 className="font-serif text-3xl">{entry.institution}</h3>
+          <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 sm:gap-x-6">
+            <h3 className="font-serif text-[1.375rem] leading-snug sm:text-3xl">
+              {entry.institution}
+            </h3>
             {entry.period ? (
               <p className="label text-ink-faint">{entry.period}</p>
             ) : null}
           </header>
 
-          <p className="mt-2 text-ink-muted">
+          <p className="mt-1.5 text-[0.9375rem] text-ink-muted sm:mt-2 sm:text-base">
             {entry.field ? `${entry.degree} - ${entry.field}` : entry.degree}
           </p>
 
           {entry.notes.length > 0 ? (
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-3 space-y-1.5 sm:mt-4 sm:space-y-2">
               {entry.notes.map((note) => (
                 <li
                   key={note}
-                  className="leading-relaxed text-ink-muted text-pretty"
+                  className="text-[0.9375rem] leading-relaxed text-ink-muted text-pretty sm:text-base"
                 >
                   {note}
                 </li>

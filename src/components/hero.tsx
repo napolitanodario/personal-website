@@ -10,6 +10,9 @@ const introLinkClassName =
  * The entire content of the home page: portrait, role, name, introduction
  * and contact links. Spacing is kept tight on purpose so the block fits in
  * one viewport, its vertical placement is handled by the page.
+ *
+ * Mobile sizes are intentionally smaller so the portrait, copy and footer
+ * links stay on screen without scrolling on a typical phone.
  */
 export function Hero() {
   return (
@@ -25,16 +28,16 @@ export function Hero() {
         width={320}
         height={320}
         priority
-        className="size-32 rounded-full object-cover object-top ring-1 ring-rule md:size-40"
+        className="size-20 rounded-full object-cover object-top ring-1 ring-rule sm:size-32 md:size-40"
       />
 
-      <p className="label mt-8 text-accent">{profile.role}</p>
+      <p className="label mt-4 text-accent sm:mt-8">{profile.role}</p>
 
-      <h1 className="mt-4 font-serif text-5xl leading-[1.05] tracking-tight text-balance sm:text-6xl md:text-7xl">
+      <h1 className="mt-2 font-serif text-[2.125rem] leading-[1.08] tracking-tight text-balance sm:mt-4 sm:text-6xl md:text-7xl">
         {profile.name}
       </h1>
 
-      <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-muted text-pretty">
+      <p className="mt-3 max-w-2xl text-[0.9375rem] leading-relaxed text-ink-muted text-pretty sm:mt-6 sm:text-lg">
         {introParts.map((part, index) => {
           if (part.type === "text") {
             return <span key={index}>{part.text}</span>;
@@ -62,7 +65,7 @@ export function Hero() {
         })}
       </p>
 
-      <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+      <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 sm:mt-8 sm:gap-x-6 sm:gap-y-3">
         {links.map((link) => {
           /* Mailto links stay in the current tab, external ones open a new one. */
           const isExternal = link.href.startsWith("http");
@@ -73,7 +76,7 @@ export function Hero() {
               download={link.download}
               target={isExternal ? "_blank" : undefined}
               rel={isExternal ? "noreferrer" : undefined}
-              className="label border-b border-rule pb-1 text-ink transition-colors hover:border-accent hover:text-accent"
+              className="label border-b border-rule pb-0.5 text-ink transition-colors hover:border-accent hover:text-accent sm:pb-1"
             >
               {link.label}
             </a>

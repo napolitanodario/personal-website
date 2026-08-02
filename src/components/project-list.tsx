@@ -40,8 +40,8 @@ function ProjectPreviews({ images }: { images: NonNullable<Project["images"]> })
     <div
       className={
         multi
-          ? "mt-5 grid gap-3 sm:grid-cols-2"
-          : "mt-5"
+          ? "mt-3 grid gap-2.5 sm:mt-5 sm:gap-3 sm:grid-cols-2"
+          : "mt-3 sm:mt-5"
       }
     >
       {images.map((image) => (
@@ -80,19 +80,19 @@ function ExpandableDescription({
   const collapsed = collapsible && !expanded;
 
   return (
-    <div className="mt-5">
+    <div className="mt-3 sm:mt-5">
       <div className="relative">
         <div
-          className={`space-y-4 ${
+          className={`space-y-3 sm:space-y-4 ${
             collapsed
-              ? "max-h-32 overflow-hidden [mask-image:linear-gradient(to_bottom,black_45%,transparent)]"
+              ? "max-h-28 overflow-hidden [mask-image:linear-gradient(to_bottom,black_45%,transparent)] sm:max-h-32"
               : ""
           }`}
         >
           {paragraphs.map((paragraph) => (
             <p
               key={paragraph.slice(0, 48)}
-              className="leading-relaxed text-ink-muted text-pretty"
+              className="text-[0.9375rem] leading-relaxed text-ink-muted text-pretty sm:text-base"
             >
               {paragraph}
             </p>
@@ -104,7 +104,7 @@ function ExpandableDescription({
         <button
           type="button"
           onClick={() => setExpanded((open) => !open)}
-          className="label mt-3 inline-block border-b border-rule pb-1 text-accent transition-colors hover:border-accent"
+          className="label mt-2.5 inline-block border-b border-rule pb-0.5 text-accent transition-colors hover:border-accent sm:mt-3 sm:pb-1"
         >
           {expanded ? "close" : "read more"}
         </button>
@@ -120,21 +120,23 @@ function ExpandableDescription({
  */
 export function ProjectList() {
   return (
-    <div className="space-y-15">
+    <div className="space-y-10 sm:space-y-15">
       {projects.map((project) => (
         <article key={project.title}>
-          <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-            <div className="flex items-center gap-5">
-              <h3 className="font-serif text-3xl">{project.title}</h3>
+          <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 sm:gap-x-6">
+            <div className="flex min-w-0 items-center gap-3 sm:gap-5">
+              <h3 className="font-serif text-[1.375rem] leading-snug sm:text-3xl">
+                {project.title}
+              </h3>
               {project.href ? (
                 <a
                   href={project.href}
                   target="_blank"
                   rel="noreferrer"
                   aria-label={`Open ${project.title} on GitHub`}
-                  className="text-ink-muted transition-colors hover:text-accent"
+                  className="shrink-0 text-ink-muted transition-colors hover:text-accent"
                 >
-                  <GitHubIcon className="size-7" />
+                  <GitHubIcon className="size-5 sm:size-7" />
                 </a>
               ) : null}
             </div>
@@ -147,7 +149,7 @@ export function ProjectList() {
 
           <ExpandableDescription description={project.description} />
 
-          <ul className="mt-4 flex flex-wrap gap-2">
+          <ul className="mt-3 flex flex-wrap gap-1.5 sm:mt-4 sm:gap-2">
             {project.tools.map((tool) => (
               <Tag key={tool}>{tool}</Tag>
             ))}

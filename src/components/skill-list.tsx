@@ -12,11 +12,11 @@ function skillLabel(item: SkillItem): string {
  */
 export function SkillList() {
   return (
-    <dl className="space-y-8">
+    <dl className="space-y-6 sm:space-y-8">
       {skills.map((group) => (
-        <div key={group.label} className="grid gap-2">
+        <div key={group.label} className="grid gap-1.5 sm:gap-2">
           <dt className="label text-ink-faint">{group.label}</dt>
-          <dd className="leading-relaxed text-pretty">
+          <dd className="text-[0.9375rem] leading-relaxed text-pretty sm:text-base">
             {group.items.map((item, index) => (
               <span key={skillLabel(item)}>
                 {index > 0 ? ", " : null}

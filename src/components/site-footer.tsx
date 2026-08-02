@@ -12,9 +12,9 @@ export function SiteFooter() {
 
   return (
     <footer className="mt-auto border-t border-rule">
-      <Container className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-6">
+      <Container className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-4 sm:gap-x-6 sm:gap-y-3 sm:py-6">
         <p className="label text-ink-faint">Last updated {lastUpdated}</p>
-        <ul className="flex flex-wrap gap-x-6 gap-y-2">
+        <ul className="flex flex-wrap gap-x-4 gap-y-2 sm:gap-x-6">
           {links.map((link) => {
             const isExternal = link.href.startsWith("http");
             return (
