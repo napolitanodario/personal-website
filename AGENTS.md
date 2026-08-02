@@ -17,6 +17,6 @@ Dependencies are installed automatically by the startup update script; no manual
 
 Non-obvious notes:
 
-- Pages: `/` is a minimal, non-scrolling home page; `/cv` is the full scrollable resume. The header appears on both and links to `/cv#<section>` anchors, so clicking a nav item from `/` navigates to the CV page.
+- Pages: `/` is a minimal, non-scrolling home page; `/resume` is the full scrollable resume. The header appears on both and links to `/resume#<section>` anchors, so clicking a nav item from `/` navigates to the resume page.
 - The theme toggle (`src/components/theme-toggle.tsx`) is the only interactive piece: it writes `data-theme` to `<html>` and persists to `localStorage`; it is not React-state driven.
 - During GUI testing, the VM desktop screensaver (a black screen with a rotating 3D cube) can appear after a few seconds of mouse/keyboard idle. This is the desktop, not an app crash — move the mouse or click to dismiss it, and avoid leaving the screen idle mid-recording.

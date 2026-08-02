@@ -8,7 +8,7 @@ import { cvSectionHref, cvSections } from "@/content/sections";
 /*
  * Sticky top bar, identical on every page. It always lists the CV sections,
  * so the full scope of the site is visible even from the bare home page.
- * Links point at /cv anchors: from the home page that is a navigation, from
+ * Links point at /resume anchors: from the home page that is a navigation, from
  * the CV page it is a scroll to the matching section.
  *
  * The bar wraps instead of hiding links on narrow screens, because losing the
