@@ -47,10 +47,14 @@ export function SiteHeader() {
     const measure = measureRef.current;
     if (!shell || !name || !measure) return;
 
+    const shellEl = shell;
+    const nameEl = name;
+    const measureEl = measure;
+
     function update() {
-      const available = shell.clientWidth;
-      const nameWidth = name.offsetWidth;
-      const linksWidth = Math.ceil(measure.scrollWidth);
+      const available = shellEl.clientWidth;
+      const nameWidth = nameEl.offsetWidth;
+      const linksWidth = Math.ceil(measureEl.scrollWidth);
       const next = pickLayout(available, nameWidth, linksWidth);
       setLayout((current) => (current === next ? current : next));
     }
