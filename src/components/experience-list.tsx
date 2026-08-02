@@ -91,9 +91,9 @@ function Position({ job }: { job: Experience }) {
         <details className="case-studies mt-8">
           <summary className="label inline-block border-b border-rule pb-1 text-accent transition-colors hover:border-accent">
             <span className="case-studies-closed">
-              View detailed case studies
+              read case studies
             </span>
-            <span className="case-studies-open">Hide case studies</span>
+            <span className="case-studies-open">close case studies</span>
           </summary>
 
           <div className="mt-12 space-y-12">
@@ -114,7 +114,7 @@ function Position({ job }: { job: Experience }) {
  */
 export function ExperienceList() {
   return (
-    <div className="space-y-20">
+    <div className="space-y-15">
       {experience.map((job) => (
         <Position key={`${job.company}-${job.period}`} job={job} />
       ))}

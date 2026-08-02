@@ -21,7 +21,7 @@ npm run lint
 
 - `/` is a single screen: portrait, role, name, introduction and contact links.
   There is nothing below the fold, so the page does not scroll.
-- `/cv` holds the actual content as one long scrollable page, one anchor per
+- `/resume` holds the actual content as one long scrollable page, one anchor per
   section.
 
 The header is the same on both pages and always lists every CV section, which
@@ -34,7 +34,7 @@ src/
   app/
     layout.tsx        fonts, metadata, theme anti-flash script
     page.tsx          minimal home page
-    cv/page.tsx       full curriculum, one section per anchor
+    resume/page.tsx   full resume, one section per anchor
     globals.css       design tokens, light and dark themes
   components/         header, hero, section blocks, footer, theme toggle
   content/
@@ -46,7 +46,7 @@ public/
 
 To update the site, edit `src/content/resume.ts`. Components read from it and
 never hardcode copy. Adding or renaming a CV section means touching
-`src/content/sections.ts` and `src/app/cv/page.tsx` together, so the navigation
+`src/content/sections.ts` and `src/app/resume/page.tsx` together, so the navigation
 and the anchors stay in sync.
 
 ## Writing the work experience
