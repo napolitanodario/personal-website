@@ -63,7 +63,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable} h-full overflow-x-clip antialiased`}
       /* The theme script mutates html before hydration, so the server
          and client markup legitimately differ on this element. */
       suppressHydrationWarning
@@ -71,7 +71,9 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="flex min-h-dvh flex-col font-sans">{children}</body>
+      <body className="flex min-h-dvh flex-col overflow-x-clip font-sans">
+        {children}
+      </body>
     </html>
   );
 }

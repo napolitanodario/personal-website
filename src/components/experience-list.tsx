@@ -22,7 +22,7 @@ function Beat({
       </p>
 
       <p
-        className={`mt-1.5 text-[0.9375rem] leading-relaxed text-pretty sm:mt-2 sm:text-base ${
+        className={`mt-1.5 text-[0.875rem] leading-relaxed text-pretty sm:mt-2 sm:text-[0.9375rem] ${
           emphasis ? "" : "text-ink-muted"
         }`}
       >
@@ -40,7 +40,7 @@ function Beat({
 function ProjectAccount({ project }: { project: ExperienceProject }) {
   return (
     <div>
-      <h4 className="font-serif text-xl leading-snug sm:text-2xl">
+      <h4 className="font-serif text-lg leading-snug sm:text-xl">
         {project.name}
       </h4>
 
@@ -66,7 +66,7 @@ function Highlights({ items }: { items: string[] }) {
       {items.map((item) => (
         <li
           key={item}
-          className="relative pl-4 text-[0.9375rem] leading-relaxed text-pretty before:absolute before:left-0 before:top-[0.7em] before:h-px before:w-2.5 before:bg-accent sm:pl-5 sm:text-base"
+          className="relative pl-4 text-[0.875rem] leading-relaxed text-pretty before:absolute before:left-0 before:top-[0.7em] before:h-px before:w-2.5 before:bg-accent sm:pl-5 sm:text-[0.9375rem]"
         >
           {item}
         </li>
@@ -79,13 +79,13 @@ function Position({ job }: { job: Experience }) {
   return (
     <article>
       <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 sm:gap-x-6">
-        <h3 className="font-serif text-[1.375rem] leading-snug sm:text-3xl">
+        <h3 className="font-serif text-[1.25rem] leading-snug sm:text-[1.75rem]">
           {job.company}
         </h3>
         <p className="label text-ink-faint">{job.period}</p>
       </header>
 
-      <p className="mt-1.5 text-[0.9375rem] text-ink-muted sm:mt-2 sm:text-base">
+      <p className="mt-1.5 text-[0.875rem] text-ink-muted sm:mt-2 sm:text-[0.9375rem]">
         {job.role} - {job.location}
       </p>
 

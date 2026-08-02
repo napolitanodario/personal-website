@@ -15,8 +15,8 @@ export default function Home() {
     <>
       <SiteHeader />
 
-      <Container className="flex flex-1 items-center py-4 sm:py-0">
-        <main className="w-full py-2 sm:py-12">
+      <Container className="flex w-full min-w-0 flex-1 items-center justify-center py-4 md:justify-start md:py-0">
+        <main className="w-full min-w-0 py-2 md:py-12">
           <Hero />
         </main>
       </Container>

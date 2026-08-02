@@ -139,14 +139,9 @@
  */
 @utility label {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0.08em;
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-
-  @media (min-width: 640px) {
-    font-size: 0.8125rem;
-    letter-spacing: 0.12em;
-  }
 }
 
 /*
@@ -156,12 +151,7 @@
  */
 @utility label-lg {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.875rem;
-  letter-spacing: 0.08em;
+  font-size: 1.0625rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-
-  @media (min-width: 640px) {
-    font-size: 1.0625rem;
-    letter-spacing: 0.1em;
-  }
 }
