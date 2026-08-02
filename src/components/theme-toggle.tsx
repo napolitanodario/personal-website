@@ -22,7 +22,7 @@ export function ThemeToggle() {
       type="button"
       onClick={shuffle}
       aria-label="Shuffle page colors"
-      className="label text-ink-muted transition-colors hover:text-accent"
+      className="label inline-flex items-center p-0 leading-none text-ink-muted transition-colors hover:text-accent"
     >
       shuffle
     </button>

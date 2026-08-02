@@ -40,7 +40,7 @@ function Beat({
 function ProjectAccount({ project }: { project: ExperienceProject }) {
   return (
     <div>
-      <h4 className="font-serif text-lg leading-snug sm:text-xl">
+      <h4 className="font-serif text-xl leading-snug sm:text-2xl">
         {project.name}
       </h4>
 
@@ -79,7 +79,7 @@ function Position({ job }: { job: Experience }) {
   return (
     <article>
       <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 sm:gap-x-6">
-        <h3 className="font-serif text-[1.25rem] leading-snug sm:text-[1.75rem]">
+        <h3 className="font-serif text-2xl leading-snug sm:text-3xl">
           {job.company}
         </h3>
         <p className="label text-ink-faint">{job.period}</p>

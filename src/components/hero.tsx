@@ -28,12 +28,12 @@ export function Hero() {
         width={320}
         height={320}
         priority
-        className="size-32 rounded-full object-cover object-top ring-1 ring-rule md:size-40"
+        className="size-36 rounded-full object-cover object-top ring-1 ring-rule md:size-40"
       />
 
       <p className="label mt-5 text-accent md:mt-8">{profile.role}</p>
 
-      <h1 className="mt-2 font-serif text-[2.125rem] leading-[1.08] tracking-tight text-balance md:mt-4 md:text-6xl lg:text-7xl">
+      <h1 className="mt-2 font-serif text-[2.875rem] leading-[1.08] tracking-tight text-balance md:mt-4 md:text-6xl lg:text-7xl">
         {profile.name}
       </h1>
 

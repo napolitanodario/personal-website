@@ -117,7 +117,10 @@ export function SiteHeader() {
   }, [menuOpen]);
 
   const linkClassName =
-    "label text-ink-muted transition-colors hover:text-accent";
+    "label inline-flex items-center leading-none text-ink-muted transition-colors hover:text-accent";
+
+  const brandClassName =
+    "label inline-flex items-center leading-none text-ink transition-colors hover:text-accent";
 
   const sectionLinks = (
     <ul className="flex items-center gap-x-5">
@@ -136,14 +139,14 @@ export function SiteHeader() {
   );
 
   const shuffle = (
-    <div className="shrink-0 border-l border-rule pl-5">
+    <div className="flex shrink-0 items-center border-l border-rule pl-5">
       <ThemeToggle />
     </div>
   );
 
   return (
     <header className="sticky top-0 z-10 overflow-x-clip border-b border-rule bg-paper/40 backdrop-blur-md">
-      <Container className="relative py-2.5 sm:py-4">
+      <Container className="relative">
         {/*
          * Fixed + invisible: real label metrics, zero impact on document width.
          * A clipped 0×0 box was under-reporting width and forcing the overflowing
@@ -169,16 +172,20 @@ export function SiteHeader() {
         <div
           ref={shellRef}
           className={
-            layout === "row"
-              ? "flex w-full min-w-0 items-center justify-between gap-8"
-              : "flex w-full min-w-0 flex-col gap-2.5"
+            layout === "stack" || (layout === "menu" && menuOpen)
+              ? "flex w-full min-w-0 flex-col"
+              : "w-full min-w-0"
           }
         >
-          <div className="flex w-full min-w-0 items-center justify-between gap-4">
+          {/*
+           * Fixed bar height so the compacted mobile menu matches desktop.
+           * The dropdown expands below this row and does not change it.
+           */}
+          <div className="flex min-h-16 w-full min-w-0 items-center justify-between gap-4">
             <Link
               ref={nameRef}
               href="/"
-              className="label shrink-0 text-ink transition-colors hover:text-accent"
+              className={`${brandClassName} shrink-0`}
             >
               {profile.name}
             </Link>
@@ -189,7 +196,7 @@ export function SiteHeader() {
                   type="button"
                   aria-expanded={menuOpen}
                   aria-controls="site-header-menu"
-                  className={linkClassName}
+                  className={`${linkClassName} p-0`}
                   onClick={() => setMenuOpen((open) => !open)}
                 >
                   {menuOpen ? "close" : "menu"}
@@ -214,33 +221,48 @@ export function SiteHeader() {
             <nav
               ref={navRef}
               aria-label="Curriculum sections"
-              className="flex w-full items-center justify-end gap-x-5 whitespace-nowrap"
+              className="flex min-h-16 w-full items-center justify-end gap-x-5 whitespace-nowrap"
             >
               {sectionLinks}
               {shuffle}
             </nav>
           ) : null}
 
-          {layout === "menu" && menuOpen ? (
-            <nav
+          {layout === "menu" ? (
+            <div
               id="site-header-menu"
-              aria-label="Curriculum sections"
-              className="border-t border-rule pt-2.5"
+              className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${
+                menuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+              }`}
+              inert={menuOpen ? undefined : true}
             >
-              <ul className="flex flex-col items-end gap-y-3">
-                {cvSections.map((section) => (
-                  <li key={section.id}>
-                    <Link
-                      href={cvSectionHref(section.id)}
-                      className={linkClassName}
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      {section.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+              <div className="min-h-0 overflow-hidden">
+                <nav
+                  aria-label="Curriculum sections"
+                  aria-hidden={!menuOpen}
+                  className={`border-t border-rule py-4 transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none ${
+                    menuOpen
+                      ? "translate-y-0 opacity-100"
+                      : "-translate-y-1 opacity-0"
+                  }`}
+                >
+                  <ul className="flex flex-col items-end gap-y-3">
+                    {cvSections.map((section) => (
+                      <li key={section.id}>
+                        <Link
+                          href={cvSectionHref(section.id)}
+                          className={linkClassName}
+                          tabIndex={menuOpen ? undefined : -1}
+                          onClick={() => setMenuOpen(false)}
+                        >
+                          {section.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </div>
+            </div>
           ) : null}
         </div>
       </Container>

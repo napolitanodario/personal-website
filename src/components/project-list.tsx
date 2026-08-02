@@ -123,9 +123,9 @@ export function ProjectList() {
     <div className="space-y-10 sm:space-y-15">
       {projects.map((project) => (
         <article key={project.title}>
-          <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 sm:gap-x-6">
+          <header className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between sm:gap-x-6">
             <div className="flex min-w-0 items-center gap-3 sm:gap-5">
-              <h3 className="font-serif text-[1.375rem] leading-snug sm:text-3xl">
+              <h3 className="font-serif text-2xl leading-snug sm:text-3xl">
                 {project.title}
               </h3>
               {project.href ? (

@@ -28,6 +28,7 @@ const instrumentSerif = Instrument_Serif({
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 /* ------------------------------------------------------------------ */
