@@ -49,12 +49,11 @@ export const metadata: Metadata = {
 };
 
 /*
- * Runs before the first paint and restores a previously chosen theme.
- * Without it the page would render with the system theme for one frame
- * and then flip, which reads as a flash. Kept as a minified string
- * because it is inlined into the document head.
+ * Runs before the first paint and restores a previously shuffled palette.
+ * Without it the page would flash the default tokens for one frame.
+ * Kept as a minified string because it is inlined into the document head.
  */
-const themeScript = `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.dataset.theme=t}}catch(e){}`;
+const themeScript = `try{var p=JSON.parse(localStorage.getItem("palette")||"null");if(p&&p.paper&&p.accent&&p.ink&&p.paperRaised&&p.inkMuted&&p.inkFaint&&p.rule&&(p.scheme==="light"||p.scheme==="dark")){var r=document.documentElement;r.style.setProperty("--paper",p.paper);r.style.setProperty("--paper-raised",p.paperRaised);r.style.setProperty("--ink",p.ink);r.style.setProperty("--ink-muted",p.inkMuted);r.style.setProperty("--ink-faint",p.inkFaint);r.style.setProperty("--rule",p.rule);r.style.setProperty("--accent",p.accent);r.dataset.scheme=p.scheme}}catch(e){}`;
 
 export default function RootLayout({
   children,
