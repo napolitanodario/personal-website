@@ -1,10 +1,10 @@
 /**
- * The sections of the CV, in the order they appear on the /cv page.
+ * The sections of the CV, in the order they appear on the /resume page.
  * One list drives both the navigation in the site header and the anchor
  * ids the CV page scrolls to, so the two can never drift apart.
  */
 export type CvSection = {
-  /** Anchor id on the /cv page. */
+  /** Anchor id on the /resume page. */
   id: string;
   title: string;
 };
@@ -20,5 +20,5 @@ export const cvSections: CvSection[] = [
 
 /** Link to a section of the CV page from anywhere in the site. */
 export function cvSectionHref(id: string): string {
-  return `/cv#${id}`;
+  return `/resume#${id}`;
 }

@@ -29,9 +29,15 @@ export function ProjectList() {
             <p className="label text-ink-faint">{project.venue}</p>
           </header>
 
-          <p className="mt-3 leading-relaxed text-ink-muted text-pretty">
-            {project.description}
-          </p>
+          <div className="mt-3 space-y-3 leading-relaxed text-ink-muted text-pretty">
+            {project.description
+              .split(/\n\s*\n/)
+              .map((paragraph) => paragraph.trim())
+              .filter(Boolean)
+              .map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+          </div>
 
           <ul className="mt-4 flex flex-wrap gap-2">
             {project.tools.map((tool) => (

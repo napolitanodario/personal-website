@@ -179,29 +179,47 @@ export const projects: Project[] = [
   {
     title: "Arduino Hackathon",
     venue: "POLIMI NECSTLab",
-    description:
-      "An Arduino-based home safety system combining voice keyword spotting with a local real-time anomaly detection model (Isolation Forest) to detect habit disruptions, with remote control and automated alert delivery via web dashboards.",
-    tools: ["Arduino UNO Q", "scikit-learn", "Firebase"],
+    href: "https://github.com/napolitanodario/SafeNet-Arduino-hackaton",
+    description: [
+      "SafeNet is a home safety system built for the Arduino UNO Q hackathon at POLIMI NECSTLab. The board splits work across two processors. The Linux MPU runs Python for audio processing, machine learning, cloud synchronization, and a REST API. The STM32 MCU drives the reed switch, PIR sensor, LEDs, buzzer, and RFID reader over GPIO and SPI. The two sides communicate through the Arduino Bridge, a MessagePack-RPC channel over a Unix socket.",
+      "Entry and exit events are inferred from the temporal order of reed and PIR activations. An RFID badge arms and disarms the system. When armed, on-device keyword spotting listens for the Italian word \"aiuto\" on a USB microphone and can trigger a local alarm plus a Telegram notification.",
+      "Anomaly detection uses two complementary models. An Isolation Forest flags unusual entry and exit times from features such as hour of day, weekday, and elapsed time since the previous event. A separate absence model estimates expected return windows per time bucket from historical exit-entry pairs and raises an alert when a return is overdue. Both models retrain periodically on a sliding window of logged events.",
+      "Firebase Realtime Database synchronizes device status, events, and remote commands. A web dashboard and a Telegram bot can arm the system, enable or disable detectors, and dismiss an overdue absence. The device publishes state and polls commands, so it does not require inbound network access.",
+    ].join("\n\n"),
+    tools: ["Arduino UNO Q", "scikit-learn", "Firebase", "Flask"],
   },
   {
     title: "Deep Learning Competitions",
     venue: "POLIMI",
-    description:
-      "Two vision challenges: blood cell image classification and Martian terrain semantic segmentation. Transfer learning and fine tuning on CNNs and U-Nets for up to +20% accuracy and a top 10 leaderboard placement, plus ensembling, data augmentation, class rebalancing and loss tuning to handle rare classes.",
+    href: "https://github.com/napolitanodario/ANNDL-competition-2024",
+    description: [
+      "Two computer vision competitions from the Politecnico di Milano ANNDL course: blood cell classification and Martian terrain semantic segmentation.",
+      "The classification task assigns 13,759 RGB images of size 96x96 to eight blood cell classes. Perceptual hashing removed about 1,800 near-duplicate training samples. Transfer learning improved accuracy from 42% to 62%. An ensemble of two models then reached 70% on the hidden test set. On this dataset, MobileNetV2 often outperformed much larger architectures such as ConvNeXtBase. Simple geometric and photometric augmentations helped, while aggressive policies such as MixUp and RandAugment often reduced accuracy.",
+      "The segmentation task labels grayscale 64x128 Mars images into five terrain classes. The training set contains 2,615 annotated frames against 10,022 unlabeled test images, with strong class imbalance. Duplicating the rarest class before training improved U-Net performance by about 9%. Focal loss with gamma 2 produced more balanced results than Dice or Jaccard losses. Excluding the background class from the loss avoided an mIoU drop larger than 10%.",
+      "U-Net and U-Net++ with a MobileNetV2 encoder outperformed DeepLabV3+, SegFormer, PSPNet, and FPN in our experiments. A four-model ensemble raised mIoU from 66.0% to 68.4%, for a final ranking of 19th out of 197 teams.",
+    ].join("\n\n"),
     tools: ["TensorFlow", "PyTorch", "Keras", "OpenCV", "scikit-learn"],
   },
   {
     title: "Visual Impairment Assistant",
     venue: "Thesis project, UNIMORE ARSControl",
-    description:
-      "A computer vision prototype helping visually impaired people navigate urban and domestic environments, running real-time stereo depth estimation and object detection on a Raspberry Pi 4.",
+    href: "https://github.com/napolitanodario/visual-impaiment-assistant",
+    description: [
+      "Bachelor thesis prototype for assistive navigation of visually impaired users in indoor and outdoor environments. The wearable setup runs on a Raspberry Pi 4 with an Intel RealSense D415, which provides synchronized RGB frames and active stereo depth maps.",
+      "The runtime is a three-process pipeline connected by bounded multiprocessing queues. A stream reader captures coherent depth and color frames from the camera. Obstacle detection thresholds depth between 0.4 m and 1.5 m, applies morphological closing, extracts contours, and tracks nearby obstacles by centroid. Object detection runs a lightweight detector on RGB frames and associates bounding boxes with depth obstacles by center proximity. Fused alerts report object class, coarse image-plane position, and distance.",
+      "On the Raspberry Pi 4, obstacle detection reached about 7 frames per second, roughly 18 times faster than object detection on the same board. That trade-off was acceptable because text-to-speech alerts only need to fire every few tens of seconds. The thesis target model was EfficientDet-Lite0 in TensorFlow Lite. The public reference implementation uses YOLOv8 Nano for desktop demos.",
+    ].join("\n\n"),
     tools: ["OpenCV", "TensorFlow", "Intel RealSense", "multiprocessing"],
   },
   {
     title: "Natural Language Processing Competition",
     venue: "POLIMI",
-    description:
-      "An end-to-end multimodal pipeline on a large medical imaging dataset covering data analysis, text-based image retrieval and classification. Fine-tuned CNNs and multimodal language models (MedGemma, Qwen 2.5-VL) for captioning, and built a semantic search engine on image embeddings.",
+    href: "https://github.com/napolitanodario/NLP-project-submission",
+    description: [
+      "End-to-end multimodal study on the NIH Chest X-ray 14 dataset. The main table contains 112,120 samples with 512-dimensional BiomedCLIP image and text embeddings, view position, and 15 pathology labels. The label distribution is strongly imbalanced: No Finding alone accounts for more than half of the rows.",
+      "Classical retrieval covers BM25, TF-IDF, and Word2Vec over radiology-style prompts. Image embeddings are indexed in ChromaDB with cosine similarity for text, image, and raw-vector queries. Classification ranges from multilayer perceptrons on frozen embeddings to DenseNet121 fine-tuned on a class-balanced image subset. Embedding-based models reach high mAUROC, but exact multilabel F1 remains low when rare pathologies dominate the error.",
+      "For captioning, a CLIP-prefix GPT-2 mapper generates short pathology descriptions from image embeddings. LoRA fine-tuning of MedGemma 4B improved label F1 to about 0.47 on a 100-sample evaluation. Qwen 2.5-VL 3B and 7B were fine-tuned on the same image-pathology pairs with lower F1 on that check. Overall, the project is most useful as a comparative study of retrieval, class imbalance, and medical vision-language captioning.",
+    ].join("\n\n"),
     tools: [
       "PyTorch",
       "TensorFlow",
@@ -214,9 +232,14 @@ export const projects: Project[] = [
   {
     title: "Pantry and Recipes App",
     venue: "POLIMI",
-    description:
-      "A Flutter mobile application for pantry tracking and smart recipe discovery, backed by Firebase and integrating Gemini AI and Spoonacular APIs, with extensive unit and integration testing.",
-    tools: ["Flutter", "Gemini API", "Firebase"],
+    href: "https://github.com/napolitanodario/DIMA-PantryDish-documentation",
+    description: [
+      "PantryDish is a Flutter application for iOS and Android that recommends recipes from ingredients already available at home. It combines a virtual pantry, expiry notifications, and preference-aware recipe discovery to reduce food waste.",
+      "Ingredients can be added manually, from fridge or pantry photos, or from receipt OCR. Gemini performs ingredient recognition on those images and receipts and pre-fills product names, quantities, and storage areas. Spoonacular provides recipe search, details, and recommendations filtered by the current pantry and by diet, allergies, cuisine, and difficulty preferences.",
+      "The UI centers on a swipe-based recipe feed, with saved recipes, pantry management, and a profile screen. Firebase Authentication manages accounts. Firestore persists profiles, pantry items, and saved recipes. Firebase Cloud Messaging and local notifications deliver expiry reminders. Remote Config exposes maintenance mode and forced-upgrade flags.",
+      "The application source is private for the course, while the public design docs describe an MVC architecture with Riverpod for state management. The test suite includes 96 unit tests, 146 widget tests, and 22 integration tests covering authentication, pantry CRUD, swipe flows, vision and OCR paths, and profile settings.",
+    ].join("\n\n"),
+    tools: ["Flutter", "Gemini API", "Firebase", "Spoonacular"],
   },
 ];
 
