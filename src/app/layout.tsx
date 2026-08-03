@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import { profile } from "@/content/resume";
 import "./globals.css";
 
@@ -74,6 +75,11 @@ export default function RootLayout({
       </head>
       <body className="flex min-h-dvh flex-col overflow-x-clip font-sans">
         {children}
+        <Script
+          src="https://analytics.napolitanodar.io/script.js"
+          strategy="afterInteractive"
+          data-website-id="1d1480b0-7f7b-45ed-9110-c298559abe4d"
+        />
       </body>
     </html>
   );

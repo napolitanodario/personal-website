@@ -9,7 +9,7 @@ export function EducationList() {
     <div className="space-y-10 sm:space-y-15">
       {education.map((entry) => (
         <article key={entry.institution}>
-          <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 sm:gap-x-6">
+          <header className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between sm:gap-x-6">
             <h3 className="font-serif text-[1.375rem] leading-snug sm:text-3xl">
               {entry.institution}
             </h3>
@@ -27,7 +27,7 @@ export function EducationList() {
               {entry.notes.map((note) => (
                 <li
                   key={note}
-                  className="text-[0.9375rem] leading-relaxed text-ink-muted text-pretty sm:text-base"
+                  className="text-[0.9375rem] leading-relaxed text-pretty sm:text-base"
                 >
                   {note}
                 </li>
