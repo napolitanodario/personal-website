@@ -67,15 +67,16 @@ export function Hero() {
 
       <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 md:mt-8 md:justify-start md:gap-x-6 md:gap-y-3">
         {links.map((link) => {
-          /* Mailto links stay in the current tab, external ones open a new one. */
-          const isExternal = link.href.startsWith("http");
+          /* Mailto stays here; http and PDF open in a new tab for viewing. */
+          const opensInNewTab =
+            link.href.startsWith("http") || link.href.endsWith(".pdf");
           return (
             <a
               key={link.href}
               href={link.href}
               download={link.download}
-              target={isExternal ? "_blank" : undefined}
-              rel={isExternal ? "noreferrer" : undefined}
+              target={opensInNewTab ? "_blank" : undefined}
+              rel={opensInNewTab ? "noreferrer" : undefined}
               className="label border-b border-rule pb-0.5 text-ink transition-colors hover:border-accent hover:text-accent sm:pb-1"
             >
               {link.label}

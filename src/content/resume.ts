@@ -148,7 +148,6 @@ export const links: Link[] = [
   {
     label: "PDF resume",
     href: "/Dario_Napolitano_Resume.pdf",
-    download: "Dario_Napolitano_Resume.pdf",
   },
 ];
 

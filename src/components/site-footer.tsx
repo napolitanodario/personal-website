@@ -16,14 +16,15 @@ export function SiteFooter() {
         <p className="text-sm text-ink">Last updated {lastUpdated}</p>
         <ul className="flex flex-wrap gap-x-4 gap-y-2 sm:gap-x-6">
           {links.map((link) => {
-            const isExternal = link.href.startsWith("http");
+            const opensInNewTab =
+              link.href.startsWith("http") || link.href.endsWith(".pdf");
             return (
               <li key={link.href}>
                 <a
                   href={link.href}
                   download={link.download}
-                  target={isExternal ? "_blank" : undefined}
-                  rel={isExternal ? "noreferrer" : undefined}
+                  target={opensInNewTab ? "_blank" : undefined}
+                  rel={opensInNewTab ? "noreferrer" : undefined}
                   className="label text-ink-muted transition-colors hover:text-accent"
                 >
                   {link.label}
