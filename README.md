@@ -1,8 +1,6 @@
 # Personal website
 
-Portfolio of Dario Napolitano. Next.js 16 (App Router), TypeScript, Tailwind CSS v4.
-There is no backend: every piece of content is static and lives in a single typed file.
-
+Portfolio of Dario Napolitano. Next.js 16 (App Router), TypeScript, Tailwind CSS v4. No backend
 ## Requirements
 
 - Node.js 20.9 or newer (tested on 22)
