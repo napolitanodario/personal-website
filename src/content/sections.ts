@@ -12,6 +12,7 @@ export type CvSection = {
 export const cvSections: CvSection[] = [
   { id: "work", title: "Work" },
   { id: "projects", title: "Projects" },
+  { id: "publications", title: "Publications" },
   { id: "education", title: "Education" },
   { id: "skills", title: "Skills" },
 ];

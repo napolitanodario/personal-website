@@ -23,6 +23,19 @@ function GitHubIcon({ className }: { className?: string }) {
   );
 }
 
+function ExternalLinkIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      aria-hidden="true"
+      className={className}
+      fill="currentColor"
+    >
+      <path d="M3.75 2h3.5a.75.75 0 010 1.5h-3.5a.25.25 0 00-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 00.25-.25v-3.5a.75.75 0 011.5 0v3.5A1.75 1.75 0 0112.25 14h-8.5A1.75 1.75 0 012 12.25v-8.5C2 2.784 2.784 2 3.75 2zm6.854-1h4.146a.25.25 0 01.25.25v4.146a.25.25 0 01-.427.177L13.03 4.03 9.28 7.78a.751.751 0 01-1.042-.018.751.751 0 01-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0110.604 1z" />
+    </svg>
+  );
+}
+
 function paragraphsOf(description: Project["description"]): string[] {
   return Array.isArray(description) ? description : [description];
 }
@@ -92,7 +105,7 @@ function ExpandableDescription({
           {paragraphs.map((paragraph) => (
             <p
               key={paragraph.slice(0, 48)}
-              className="text-[0.9375rem] leading-relaxed text-ink-muted text-pretty sm:text-base"
+              className="text-[0.9375rem] leading-relaxed text-ink text-pretty sm:text-base"
             >
               {paragraph}
             </p>
@@ -126,18 +139,44 @@ export function ProjectList() {
           <header className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between sm:gap-x-6">
             <div className="flex min-w-0 items-center gap-3 sm:gap-5">
               <h3 className="font-serif text-2xl leading-snug sm:text-3xl">
-                {project.title}
+                {project.href ? (
+                  <a
+                    href={project.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="transition-colors hover:text-accent"
+                  >
+                    {project.title}
+                  </a>
+                ) : (
+                  project.title
+                )}
               </h3>
-              {project.href ? (
-                <a
-                  href={project.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`Open ${project.title} on GitHub`}
-                  className="shrink-0 text-ink-muted transition-colors hover:text-accent"
-                >
-                  <GitHubIcon className="size-5 sm:size-7" />
-                </a>
+              {project.href || project.paperHref ? (
+                <div className="flex shrink-0 items-center gap-2 sm:gap-2.5">
+                  {project.href ? (
+                    <a
+                      href={project.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`Open ${project.title} on GitHub`}
+                      className="text-ink-muted transition-colors hover:text-accent"
+                    >
+                      <GitHubIcon className="size-5 sm:size-7" />
+                    </a>
+                  ) : null}
+                  {project.paperHref ? (
+                    <a
+                      href={project.paperHref}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`Open the published paper for ${project.title}`}
+                      className="text-ink-muted transition-colors hover:text-accent"
+                    >
+                      <ExternalLinkIcon className="size-5 sm:size-7" />
+                    </a>
+                  ) : null}
+                </div>
               ) : null}
             </div>
             <p className="label text-ink-faint">{project.venue}</p>

@@ -63,13 +63,24 @@ export type Project = {
   /** One string, or several paragraphs shown with a blank line between them. */
   description: string | string[];
   tools: string[];
-  /** Optional repository or write-up URL. When set, the title becomes a link. */
+  /** Optional repository URL. When set, a GitHub icon is shown next to the title. */
   href?: string;
+  /** Optional paper URL. When set, an external-link icon is shown next to the GitHub icon. */
+  paperHref?: string;
   /** Optional preview figures shown under the title, before the description. */
   images?: {
     src: string;
     alt: string;
   }[];
+};
+
+export type Publication = {
+  title: string;
+  authors: string;
+  venue: string;
+  details: string;
+  href: string;
+  period?: string;
 };
 
 export type Education = {
@@ -246,10 +257,9 @@ export const projects: Project[] = [
     title: "Arduino Hackathon",
     venue: "POLIMI NECSTLab",
     description: [
-      "SafeNet is a home safety system built for the Arduino UNO Q hackathon at POLIMI NECSTLab. The board splits work across two processors. The Linux MPU runs Python for audio processing, machine learning, cloud synchronization, and a REST API. The STM32 MCU drives the reed switch, PIR sensor, LEDs, buzzer, and RFID reader over GPIO and SPI. The two sides communicate through the Arduino Bridge, a MessagePack-RPC channel over a Unix socket.",
-      "Entry and exit events are inferred from the temporal order of reed and PIR activations. An RFID badge arms and disarms the system. When armed, on-device keyword spotting listens for the Italian word \"aiuto\" on a USB microphone and can trigger a local alarm plus a Telegram notification.",
-      "Anomaly detection uses two complementary models. An Isolation Forest flags unusual entry and exit times from features such as hour of day, weekday, and elapsed time since the previous event. A separate absence model estimates expected return windows per time bucket from historical exit-entry pairs and raises an alert when a return is overdue. Both models retrain periodically on a sliding window of logged events.",
-      "Firebase Realtime Database synchronizes device status, events, and remote commands. A web dashboard and a Telegram bot can arm the system, enable or disable detectors, and dismiss an overdue absence. The device publishes state and polls commands, so it does not require inbound network access.",
+      "As a hackathon output for the CSI course at NECSTLab (Politecnico di Milano) we built SafeNet: a home monitoring system on an Arduino UNO Q. It is meant to learn a person's habits from entry and exit events, then notice when that pattern breaks. The board splits the workload across two processors: the Arduino Linux environment runs Python for audio, machine learning and cloud sync, while the STM32 reads a reed switch and a PIR sensor so we can infer when someone comes in or leaves.",
+      "We trained an Isolation Forest on those events, plus a statistical model of how long someone usually stays out, so the system can flag an unusual hour or a late return. We also trained and ran a keyword-spotting model on-device to catch the word \"aiuto\" and raise an alarm.",
+      "For alerting we built and deployed a custom web dashboard, with a Telegram bot as a second channel.",
     ],
     tools: ["Arduino UNO Q", "scikit-learn", "Firebase", "Flask"],
     href: "https://github.com/napolitanodario/SafeNet-Arduino-hackaton",
@@ -264,10 +274,9 @@ export const projects: Project[] = [
     title: "Deep Learning Competitions",
     venue: "POLIMI",
     description: [
-      "Two computer vision competitions from the Politecnico di Milano ANNDL course: blood cell classification and Martian terrain semantic segmentation.",
-      "The classification task assigns 13,759 RGB images of size 96x96 to eight blood cell classes. Perceptual hashing removed about 1,800 near-duplicate training samples. Transfer learning improved accuracy from 42% to 62%. An ensemble of two models then reached 70% on the hidden test set. On this dataset, MobileNetV2 often outperformed much larger architectures such as ConvNeXtBase. Simple geometric and photometric augmentations helped, while aggressive policies such as MixUp and RandAugment often reduced accuracy.",
-      "The segmentation task labels grayscale 64x128 Mars images into five terrain classes. The training set contains 2,615 annotated frames against 10,022 unlabeled test images, with strong class imbalance. Duplicating the rarest class before training improved U-Net performance by about 9%. Focal loss with gamma 2 produced more balanced results than Dice or Jaccard losses. Excluding the background class from the loss avoided an mIoU drop larger than 10%.",
-      "U-Net and U-Net++ with a MobileNetV2 encoder outperformed DeepLabV3+, SegFormer, PSPNet, and FPN in our experiments. A four-model ensemble raised mIoU from 66.0% to 68.4%, for a final ranking of 19th out of 197 teams.",
+      "For the Artificial Neural Networks and Deep Learning course, our team worked on two computer vision competitions: blood-cell image classification and Martian terrain segmentation.",
+      "In the first competition we classified microscopic blood-cell images into eight types. The dataset was small, about 14,000 RGB images at 96x96, so we started from ImageNet-pretrained CNNs in Keras rather than training from scratch. Transfer learning moved accuracy from 42% to 62%. Larger models did not always help: MobileNetV2 (2M parameters) beat ConvNeXtBase (87M), and fine-tuning big networks often overfit. Light augmentations helped; heavier ones did not. Combining two complementary architectures, a shallower one for generic visual features and a deeper one for more semantic ones, brought the score to 70%.",
+      "In the second competition we segmented Martian terrain: each pixel of a 64x128 grayscale image had to be assigned to one of five surface types. Labels were noisy and classes were imbalanced. In PyTorch we compared several architectures; U-Net and U-Net++ with a MobileNetV2 encoder worked better than DeepLabV3+, SegFormer, PSPNet, and FPN. We handled the rare class by duplicating its images and trained with Focal Loss so the model did not ignore minority surfaces. Counting the background class in the loss made the network ignore the rest and dropped mIoU by more than 10%. An ensemble of four models reached 68.4% mIoU, which placed us 19th out of 197 teams.",
     ],
     tools: ["TensorFlow", "PyTorch", "Keras", "OpenCV", "scikit-learn"],
     href: "https://github.com/napolitanodario/ANNDL-competition-2024",
@@ -282,12 +291,14 @@ export const projects: Project[] = [
     title: "Visual Impairment Assistant",
     venue: "Thesis project, UNIMORE ARSControl",
     description: [
-      "Bachelor thesis prototype for assistive navigation of visually impaired users in indoor and outdoor environments. The wearable setup runs on a Raspberry Pi 4 with an Intel RealSense D415, which provides synchronized RGB frames and active stereo depth maps.",
-      "The runtime is a three-process pipeline connected by bounded multiprocessing queues. A stream reader captures coherent depth and color frames from the camera. Obstacle detection thresholds depth between 0.4 m and 1.5 m, applies morphological closing, extracts contours, and tracks nearby obstacles by centroid. Object detection runs a lightweight detector on RGB frames and associates bounding boxes with depth obstacles by center proximity. Fused alerts report object class, coarse image-plane position, and distance.",
-      "On the Raspberry Pi 4, obstacle detection reached about 7 frames per second, roughly 18 times faster than object detection on the same board. That trade-off was acceptable because text-to-speech alerts only need to fire every few tens of seconds. The thesis target model was EfficientDet-Lite0 in TensorFlow Lite. The public reference implementation uses YOLOv8 Nano for desktop demos.",
+      "This is a prototyped wearable device meant to help blind and visually impaired individuals navigate urban and domestic environments. I developed it as my bachelor's thesis in Computer Engineering at UNIMORE, later published at AREA 2025 (Springer CCIS), with Prof. Valeria Villani as supervisor and Andrea Ruo as co-supervisor. The system detects nearby obstacles, classifies objects in the scene, and reports their position and distance through text-to-speech. It runs on a Raspberry Pi 4 with an Intel RealSense D415, which provides synchronized RGB frames and depth maps from active stereo vision.",
+      "Two independent Python processes exchange data through multiprocessing queues. The obstacle-detection pipeline filters depth maps by a distance threshold, applies morphological closing and contour detection, then tracks blob centroids across frames. Consecutive depth frames are combined to reduce missing values. The object-detection pipeline classifies objects in RGB frames: EfficientDet-Lite0 on the Raspberry Pi, YOLOv8 on the desktop. Detected objects are matched to obstacles by centroid proximity so an alert can include both the class and the measured distance.",
+      "On the Raspberry Pi 4, obstacle detection runs at about 7 fps, which is sufficient given that spoken updates are issued periodically rather than at every frame.",
     ],
     tools: ["OpenCV", "TensorFlow", "Intel RealSense", "multiprocessing"],
     href: "https://github.com/napolitanodario/visual-impaiment-assistant",
+    paperHref:
+      "https://link.springer.com/chapter/10.1007/978-3-032-08049-3_3",
     images: [
       {
         src: "/processing_schema.png",
@@ -299,28 +310,34 @@ export const projects: Project[] = [
     title: "Natural Language Processing Competition",
     venue: "POLIMI",
     description: [
-      "End-to-end multimodal study on the NIH Chest X-ray 14 dataset. The main table contains 112,120 samples with 512-dimensional BiomedCLIP image and text embeddings, view position, and 15 pathology labels. The label distribution is strongly imbalanced: No Finding alone accounts for more than half of the rows.",
-      "Classical retrieval covers BM25, TF-IDF, and Word2Vec over radiology-style prompts. Image embeddings are indexed in ChromaDB with cosine similarity for text, image, and raw-vector queries. Classification ranges from multilayer perceptrons on frozen embeddings to DenseNet121 fine-tuned on a class-balanced image subset. Embedding-based models reach high mAUROC, but exact multilabel F1 remains low when rare pathologies dominate the error.",
-      "For captioning, a CLIP-prefix GPT-2 mapper generates short pathology descriptions from image embeddings. LoRA fine-tuning of MedGemma 4B improved label F1 to about 0.47 on a 100-sample evaluation. Qwen 2.5-VL 3B and 7B were fine-tuned on the same image-pathology pairs with lower F1 on that check. Overall, the project is most useful as a comparative study of retrieval, class imbalance, and medical vision-language captioning.",
+      "For the Natural Language Processing course at Politecnico di Milano, our team ran a multimodal study on the NIH Chest X-ray 14 dataset. It has about 112,000 samples, each with 512-dimensional BiomedCLIP image and text embeddings, view position, and 15 pathology labels. The labels are strongly imbalanced: No Finding alone accounts for more than half of the rows.",
+      "We compared classical retrieval (BM25, TF-IDF, and Word2Vec) over radiology-style prompts, and indexed image embeddings in ChromaDB with cosine similarity for text, image, and raw-vector queries. On classification we went from multilayer perceptrons on frozen embeddings to DenseNet121 fine-tuned on a class-balanced image subset. Embedding-based models reached high mAUROC, but exact multilabel F1 stayed low when rare pathologies dominated the error.",
+      "For captioning we mapped image embeddings through a CLIP-prefix GPT-2 model to short pathology descriptions. Fine-tuning MedGemma 4B with LoRA raised label F1 to about 0.47 on a 100-sample check. Qwen 2.5-VL at 3B and 7B, trained on the same image-pathology pairs, scored lower there. The project is most useful as a comparison of retrieval, class imbalance, and medical vision-language captioning.",
     ],
     tools: [
       "PyTorch",
       "TensorFlow",
       "Keras",
-      "Hugging Face Transformers",
+      "Hugging Face",
       "CLIP",
       "scikit-learn",
     ],
     href: "https://github.com/napolitanodario/NLP-project-submission",
+    images: [
+      {
+        src: "/nlp_dataset.png",
+        alt: "Eight NIH Chest X-ray examples of thorax diseases, each with a circled finding: atelectasis, cardiomegaly, effusion, infiltration, mass, nodule, pneumonia, and pneumothorax.",
+      },
+    ],
   },
   {
     title: "Pantry and Recipes App",
     venue: "POLIMI",
     description: [
-      "PantryDish is a Flutter application for iOS and Android that recommends recipes from ingredients already available at home. It combines a virtual pantry, expiry notifications, and preference-aware recipe discovery to reduce food waste.",
-      "Ingredients can be added manually, from fridge or pantry photos, or from receipt OCR. Gemini performs ingredient recognition on those images and receipts and pre-fills product names, quantities, and storage areas. Spoonacular provides recipe search, details, and recommendations filtered by the current pantry and by diet, allergies, cuisine, and difficulty preferences.",
-      "The UI centers on a swipe-based recipe feed, with saved recipes, pantry management, and a profile screen. Firebase Authentication manages accounts. Firestore persists profiles, pantry items, and saved recipes. Firebase Cloud Messaging and local notifications deliver expiry reminders. Remote Config exposes maintenance mode and forced-upgrade flags.",
-      "The application source is private for the course, while the public design docs describe an MVC architecture with Riverpod for state management. The test suite includes 96 unit tests, 146 widget tests, and 22 integration tests covering authentication, pantry CRUD, swipe flows, vision and OCR paths, and profile settings.",
+      "PantryDish is a Flutter app for iOS and Android that recommends recipes from ingredients already at home. It combines a virtual pantry, expiry notifications, and preference-aware recipe discovery to reduce food waste.",
+      "Ingredients can be added by hand, from fridge or pantry photos, or from receipt OCR. Gemini recognises ingredients on those images and receipts and fills in product names, quantities, and storage areas. Spoonacular provides recipe search, details, and recommendations filtered by the current pantry and by diet, allergies, cuisine, and difficulty.",
+      "The UI is built around a swipe-based recipe feed, with saved recipes, pantry management, and a profile screen. Firebase Authentication handles accounts. Firestore stores profiles, pantry items, and saved recipes. Firebase Cloud Messaging and local notifications send expiry reminders. Remote Config exposes maintenance mode and forced-upgrade flags.",
+      "The app source is private for the course, while the public design docs describe an MVC architecture with Riverpod for state management. The test suite includes 96 unit tests, 146 widget tests, and 22 integration tests covering authentication, pantry CRUD, swipe flows, vision and OCR paths, and profile settings.",
     ],
     tools: ["Flutter", "Gemini API", "Firebase", "Spoonacular"],
     href: "https://github.com/napolitanodario/DIMA-PantryDish-documentation",
@@ -335,8 +352,8 @@ export const projects: Project[] = [
     title: "AI Dobble - Card Recognition",
     venue: "Loyola University",
     description: [
-      "Computer vision project that recognises Dobble (Spot It!) cards from photos or a live camera and finds the shared symbol between two cards. Built a small dataset from scanned sheets (grid-cropped into single cards), then expanded it with brightness, shift and zoom augmentations plus full rotations at training time.",
-      "A Keras CNN (four Conv2D + MaxPool blocks, dropout, dense head) classifies among 29 card classes; predicted labels are mapped to symbol sets so the intersection yields the matching icon. A live OpenCV demo detects circular cards in the frame, runs the model and overlays the common symbol.",
+      "A computer vision project that recognises Dobble (Spot It!) cards from photos or a live camera and finds the shared symbol between two cards. I built a small dataset from scanned sheets, cropped into single cards, then expanded it with brightness, shift and zoom augmentations plus full rotations at training time.",
+      "A Keras CNN with four Conv2D and MaxPool blocks, dropout, and a dense head classifies among 29 card classes. Predicted labels are mapped to symbol sets so the intersection gives the matching icon. A live OpenCV demo detects circular cards in the frame, runs the model, and overlays the common symbol. In that setting it outpaced a human player on reaction time.",
     ],
     tools: ["Python", "Keras", "TensorFlow", "OpenCV", "scikit-learn"],
     href: "https://github.com/napolitanodario/ai-dobble-v3",
@@ -351,8 +368,8 @@ export const projects: Project[] = [
     title: "Neural Network from Scratch",
     venue: "Loyola University",
     description: [
-      "Project to build and train feed-forward networks without deep learning frameworks: only Python and NumPy. The code models the stack as Neuron, Layer and Network classes so architectures can be declared as a list of layer sizes and activation names, then wired with weights and biases at construction time.",
-      "Training implements forward propagation, backpropagation of squared error, per-neuron gradient accumulation and weight updates with a configurable learning rate. Activations include sigmoid, identity and softmax (with matching derivatives); weights can be drawn from a scaled normal distribution or set by hand for small demos. A digits loader reads 16x16 patterns (256 inputs, 10 one-hot outputs) from the bundled dataset, alongside smaller toy shapes used to check the math by hand.",
+      "As a group project at Loyola University we built and trained feed-forward networks without deep learning frameworks, using only Python and NumPy. The stack is modelled as Neuron, Layer and Network classes, so architectures can be declared as a list of layer sizes and activation names, then wired with weights and biases at construction time.",
+      "Training runs forward propagation, backpropagation of squared error, per-neuron gradient accumulation, and weight updates with a configurable learning rate. Activations include sigmoid, identity and softmax, with matching derivatives. Weights can be drawn from a scaled normal distribution or set by hand for small demos. A digits loader reads 16x16 patterns (256 inputs, 10 one-hot outputs) from the bundled dataset, next to smaller toy shapes used to check the math by hand.",
     ],
     tools: ["Python", "NumPy"],
     href: "https://github.com/napolitanodario/ML-neural-network-from-scratch",
@@ -362,6 +379,23 @@ export const projects: Project[] = [
         alt: "Diagram of a feed-forward network classifying handwritten digits from flattened pixels.",
       },
     ],
+  },
+];
+
+/* ------------------------------------------------------------------ */
+/* Publications: peer-reviewed work, most recent first                 */
+/* ------------------------------------------------------------------ */
+
+export const publications: Publication[] = [
+  {
+    title:
+      "A Wearable Stereo Vision-Based Obstacle Detection System for Visually Impaired Individuals",
+    authors:
+      "Dario Napolitano, Andrea Ruo (co-supervisor) and Prof. Valeria Villani (supervisor)",
+    venue: "AREA 2025",
+    details:
+      "Workshop on Agents and Robots for reliable Engineered Autonomy. Springer CCIS, vol. 2700, pp. 35-50.",
+    href: "https://link.springer.com/chapter/10.1007/978-3-032-08049-3_3",
   },
 ];
 

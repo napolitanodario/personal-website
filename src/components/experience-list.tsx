@@ -21,11 +21,7 @@ function Beat({
         {title}
       </p>
 
-      <p
-        className={`mt-1.5 text-[0.875rem] leading-relaxed text-pretty sm:mt-2 sm:text-[0.9375rem] ${
-          emphasis ? "" : "text-ink-muted"
-        }`}
-      >
+      <p className="mt-1.5 text-[0.875rem] leading-relaxed text-ink text-pretty sm:mt-2 sm:text-[0.9375rem]">
         {children}
       </p>
     </div>
