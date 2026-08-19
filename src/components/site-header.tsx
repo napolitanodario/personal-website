@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Container } from "@/components/container";
@@ -34,7 +35,9 @@ function pickLayout(
  * size and are never clipped: one row, a wrapped row, or a single menu.
  */
 export function SiteHeader() {
+  const pathname = usePathname();
   const shellRef = useRef<HTMLDivElement>(null);
+  const offsetRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLAnchorElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -95,6 +98,65 @@ export function SiteHeader() {
     if (layout !== "menu") setMenuOpen(false);
   }, [layout]);
 
+  /*
+   * Hash jumps use this height as scroll-padding so the sticky bar does not
+   * cover the section. The menu is excluded: it overlays instead of growing
+   * the header, otherwise closing it would shift the page mid-scroll.
+   */
+  useLayoutEffect(() => {
+    const chrome = offsetRef.current;
+    if (!chrome) return;
+
+    function apply() {
+      const node = offsetRef.current;
+      if (!node) return;
+      document.documentElement.style.setProperty(
+        "--header-offset",
+        `${Math.ceil(node.getBoundingClientRect().height)}px`,
+      );
+    }
+
+    apply();
+    const observer = new ResizeObserver(apply);
+    observer.observe(chrome);
+    return () => observer.disconnect();
+  }, [layout]);
+
+  useEffect(() => {
+    if (pathname !== "/resume") return;
+
+    function scrollToHash(behavior: ScrollBehavior) {
+      const id = window.location.hash.slice(1);
+      if (!id) return;
+      document.getElementById(id)?.scrollIntoView({
+        behavior,
+        block: "start",
+      });
+    }
+
+    const frame = requestAnimationFrame(() => scrollToHash("auto"));
+    function onPop() {
+      scrollToHash("smooth");
+    }
+    window.addEventListener("popstate", onPop);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("popstate", onPop);
+    };
+  }, [pathname]);
+
+  function onSectionClick(event: ReactMouseEvent<HTMLAnchorElement>, id: string) {
+    setMenuOpen(false);
+    if (pathname !== "/resume") return;
+    const target = document.getElementById(id);
+    if (!target) return;
+    event.preventDefault();
+    window.history.pushState(null, "", cvSectionHref(id));
+    requestAnimationFrame(() => {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
   useEffect(() => {
     if (!menuOpen) return;
 
@@ -102,7 +164,7 @@ export function SiteHeader() {
       if (event.key === "Escape") setMenuOpen(false);
     }
 
-    function onPointer(event: MouseEvent) {
+    function onPointer(event: globalThis.MouseEvent) {
       if (!shellRef.current?.contains(event.target as Node)) {
         setMenuOpen(false);
       }
@@ -129,7 +191,7 @@ export function SiteHeader() {
           <Link
             href={cvSectionHref(section.id)}
             className={linkClassName}
-            onClick={() => setMenuOpen(false)}
+            onClick={(event) => onSectionClick(event, section.id)}
           >
             {section.title}
           </Link>
@@ -145,7 +207,7 @@ export function SiteHeader() {
   );
 
   return (
-    <header className="sticky top-0 z-10 overflow-x-clip border-b border-rule bg-paper/40 backdrop-blur-md">
+    <header className="sticky top-0 z-10 border-b border-rule bg-paper/40 backdrop-blur-md">
       <Container className="relative">
         {/*
          * Fixed + invisible: real label metrics, zero impact on document width.
@@ -169,17 +231,18 @@ export function SiteHeader() {
           </div>
         </div>
 
-        <div
-          ref={shellRef}
-          className={
-            layout === "stack" || (layout === "menu" && menuOpen)
-              ? "flex w-full min-w-0 flex-col"
-              : "w-full min-w-0"
-          }
-        >
+        <div ref={shellRef} className="relative w-full min-w-0">
+          <div
+            ref={offsetRef}
+            className={
+              layout === "stack"
+                ? "flex w-full min-w-0 flex-col"
+                : "w-full min-w-0"
+            }
+          >
           {/*
            * Fixed bar height so the compacted mobile menu matches desktop.
-           * The dropdown expands below this row and does not change it.
+           * The dropdown overlays below this row and does not change it.
            */}
           <div className="flex min-h-16 w-full min-w-0 items-center justify-between gap-4">
             <Link
@@ -227,11 +290,12 @@ export function SiteHeader() {
               {shuffle}
             </nav>
           ) : null}
+          </div>
 
           {layout === "menu" ? (
             <div
               id="site-header-menu"
-              className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${
+              className={`absolute top-full right-0 left-0 z-20 grid bg-paper/95 backdrop-blur-md transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${
                 menuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
               }`}
               inert={menuOpen ? undefined : true}
@@ -253,7 +317,7 @@ export function SiteHeader() {
                           href={cvSectionHref(section.id)}
                           className={linkClassName}
                           tabIndex={menuOpen ? undefined : -1}
-                          onClick={() => setMenuOpen(false)}
+                          onClick={(event) => onSectionClick(event, section.id)}
                         >
                           {section.title}
                         </Link>

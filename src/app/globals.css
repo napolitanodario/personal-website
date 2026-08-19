@@ -13,6 +13,8 @@
   --ink-faint: #7a7368;
   --rule: #d8d0c4;
   --accent: #2a5f7a;
+  /* Sticky header height; SiteHeader overwrites this from the live bar. */
+  --header-offset: 4rem;
 }
 
 /* ==================================================================
@@ -43,6 +45,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-offset) + 0.5rem);
     color-scheme: light;
   }
 
